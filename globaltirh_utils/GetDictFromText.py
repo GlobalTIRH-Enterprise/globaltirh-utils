@@ -21,30 +21,26 @@ def get_dict_from_text(text: str) -> dict:
         ValueError: Se não for possível encontrar um JSON válido no texto.
 
     """
-    try:
-        start_delimiter = "```json"
-        end_delimiter = "```"
+    start_delimiter = "```json"
+    end_delimiter = "```"
 
-        start_index = text.find(start_delimiter)
+    start_index = text.find(start_delimiter)
 
-        # Se encontrou o início do bloco de código, tenta processar como bloco markdown
-        if start_index != -1:
-            end_index = text.rfind(end_delimiter)
-            if end_index != -1:
-                json_text = text[start_index + len(start_delimiter) : end_index].strip()
-                return loads(json_text)
-
-        # Caso contrário (ou se não fechou o bloco), tenta encontrar pelo primeiro '{' e último '}'
-        start_index = text.find("{")
-        end_index = text.rfind("}")
-
-        if start_index != -1 and end_index != -1 and start_index < end_index:
-            json_text = text[start_index : end_index + 1].strip()
+    # Se encontrou o início do bloco de código, tenta processar como bloco markdown
+    if start_index != -1:
+        end_index = text.rfind(end_delimiter)
+        if end_index != -1:
+            json_text = text[start_index + len(start_delimiter) : end_index].strip()
             return loads(json_text)
 
-        raise ValueError(
-            "Não foi possível encontrar um JSON válido no texto (nem via blocos de código nem via chaves {})."
-        )
+    # Caso contrário (ou se não fechou o bloco), tenta encontrar pelo primeiro '{' e último '}'
+    start_index = text.find("{")
+    end_index = text.rfind("}")
 
-    except Exception as e:
-        raise e
+    if start_index != -1 and end_index != -1 and start_index < end_index:
+        json_text = text[start_index : end_index + 1].strip()
+        return loads(json_text)
+
+    raise ValueError(
+        "Não foi possível encontrar um JSON válido no texto (nem via blocos de código nem via chaves {})."
+    )
