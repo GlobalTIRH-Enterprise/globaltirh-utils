@@ -25,6 +25,9 @@ def guess_mimetype(path: str) -> Optional[str]:
     # 1. Tenta inferir o tipo usando a biblioteca nativa do Python
     mime_type, _ = mimetypes.guess_type(path)
     if mime_type:
+        # Corrige comportamento do mimetypes no Windows para CSV
+        if mime_type == "application/vnd.ms-excel" and path.lower().endswith(".csv"):
+            return "text/csv"
         return mime_type
 
     # Converte para minúsculas para garantir que .PDF ou .TXT sejam capturados
