@@ -187,3 +187,4 @@ cython_debug/
 /credencial/*
 /secrets/*
 !/secrets/.env.template
+.vscode/settings.json
