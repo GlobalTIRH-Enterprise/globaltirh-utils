@@ -1,3 +1,7 @@
+from .VerificaTipo import deco_verifica_tipo
+
+
+@deco_verifica_tipo
 def string_to_bool(s: str | bool) -> bool:
     """
     Converte uma string para um valor booleano.
@@ -28,4 +32,3 @@ def string_to_bool(s: str | bool) -> bool:
         return s
     else:
         raise TypeError(f"Variável de tipo invalido: '{s}', '{type(s)}'")
-    

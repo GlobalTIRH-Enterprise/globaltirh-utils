@@ -1,6 +1,9 @@
 from bs4 import BeautifulSoup
 from markdown import markdown
+from .VerificaTipo import deco_verifica_tipo
 
+
+@deco_verifica_tipo
 def clean_html_and_markdown(text: str) -> str:
     """
     Limpa uma string de elementos HTML e Markdown.

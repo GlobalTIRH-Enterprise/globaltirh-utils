@@ -1,7 +1,9 @@
 import re
 import unicodedata
+from .VerificaTipo import deco_verifica_tipo
 
 
+@deco_verifica_tipo
 def formatar_texto_para_identificador(text: str) -> str:
     """
     Formata uma string para ser usada como um identificador seguro,
@@ -33,4 +35,3 @@ def formatar_texto_para_identificador(text: str) -> str:
     text = re.sub(pontuacao_remover, "", text)
 
     return text.lower()
-

@@ -1,7 +1,8 @@
 from typing import Set, Optional
 from os.path import splitext
+from .VerificaTipo import deco_verifica_tipo
 
-
+@deco_verifica_tipo
 def validar_gsutil_link(
     link: str, quant_parts: int = 4, tipos_verificar: Optional[Set[str]] = None
 ) -> Optional[str]:

@@ -1,3 +1,6 @@
+from .VerificaTipo import deco_verifica_tipo
+
+@deco_verifica_tipo
 def list_content_is_valid(content: list):
 
     if not isinstance(content, list):

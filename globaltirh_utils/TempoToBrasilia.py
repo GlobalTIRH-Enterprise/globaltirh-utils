@@ -1,8 +1,10 @@
 from typing import Union
 from datetime import datetime, timezone
 import pytz
+from .VerificaTipo import deco_verifica_tipo
 
 
+@deco_verifica_tipo
 def tempo_to_brasilia(dt: Union[datetime, float]) -> datetime:
     """
     Converte um objeto datetime (com ou sem timezone) ou um timestamp float (segundos desde a época Unix UTC)

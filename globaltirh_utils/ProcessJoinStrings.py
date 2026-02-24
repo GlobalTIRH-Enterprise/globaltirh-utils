@@ -1,6 +1,7 @@
+from .VerificaTipo import deco_verifica_tipo
 
 
-
+@deco_verifica_tipo
 def process_and_join_strings(string_list):
     """
     Removes duplicates from a list of strings based on a normalized
