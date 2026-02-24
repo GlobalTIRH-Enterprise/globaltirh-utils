@@ -2,7 +2,7 @@ from .VerificaTipo import deco_verifica_tipo
 
 
 @deco_verifica_tipo
-def list_content_is_valid(content: list) -> None:
+def check_content_is_valid(content: list) -> None:
     """
     Valida a estrutura de uma lista de conteúdos (geralmente usada para histórico de chat).
 
