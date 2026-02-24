@@ -7,7 +7,7 @@ _TEXT_EXTENSIONS = (".txt", ".md", ".csv", ".log")
 
 
 @deco_verifica_tipo
-def guess_mime(path: str) -> Optional[str]:
+def guess_mimetype(path: str) -> Optional[str]:
     """
     Infere o tipo MIME (MIME type) de um arquivo com base no seu caminho ou nome.
 
