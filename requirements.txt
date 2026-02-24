@@ -4,6 +4,4 @@ pyarrow
 Unidecode
 colorama
 python-dotenv
-beautifulsoup4
-Markdown
 pytz
