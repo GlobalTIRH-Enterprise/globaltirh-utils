@@ -1,6 +1,7 @@
-from typing import Any, Callable, get_origin, get_args
+from typing import Any, Callable, get_origin, get_args, Union
 from functools import wraps
 import inspect
+import types
 
 
 def verifica_tipo(params: list[tuple[Any, Any, str]]) -> None:
@@ -54,21 +55,48 @@ def _check_params(params: list[tuple[Any, Any, str]]) -> None:
     errors: list[str] = []
 
     for value, expected_type, param_name in params:
-        # Tenta usar isinstance diretamente (funciona para tipos simples e Unions no Python recente)
-        try:
-            is_valid = isinstance(value, expected_type)
-        except TypeError:
-            # Se falhar (ex: list[str] lança TypeError), tenta usar o tipo base (list)
-            origin = get_origin(expected_type)
-            if origin is not None:
-                is_valid = isinstance(value, origin)
-            else:
-                # Se não for possível validar, assume válido para não quebrar execução
-                # Ou poderia logar um aviso. Aqui optamos por ignorar validação complexa.
+        is_valid = False
+        origin = get_origin(expected_type)
+
+        # 1. Trata os tipos Union e Optional (incluindo sintaxe do Python 3.10+ com pipe '|')
+        if origin is Union or (hasattr(types, "UnionType") and origin is types.UnionType):
+            args = get_args(expected_type)
+            # Verifica se o valor corresponde a algum dos argumentos da Union
+            match_found = False
+            for arg in args:
+                # Se o argumento for NoneType (ou seja, parte de um Optional)
+                if arg is type(None):
+                    if value is None:
+                        match_found = True
+                        break
+                    continue
+
+                # Para outros tipos dentro da Union
+                arg_origin = get_origin(arg) or arg
+                try:
+                    if isinstance(value, arg_origin):
+                        match_found = True
+                        break
+                except TypeError:
+                    continue
+
+            if match_found:
                 is_valid = True
 
+        # 2. Comportamento original para os outros tipos
+        else:
+            try:
+                is_valid = isinstance(value, expected_type)
+            except TypeError:
+                if origin is not None:
+                    try:
+                        is_valid = isinstance(value, origin)
+                    except TypeError:
+                        is_valid = True
+                else:
+                    is_valid = True
+
         if not is_valid:
-            # Format types properly for the error message
             if isinstance(expected_type, tuple):
                 expected_type_name = " ou ".join(
                     [getattr(t, "__name__", str(t)) for t in expected_type]
@@ -84,5 +112,4 @@ def _check_params(params: list[tuple[Any, Any, str]]) -> None:
             )
 
     if errors:
-        # Join multiple errors with a newline for clear reading
         raise TypeError("\n".join(errors))
