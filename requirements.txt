@@ -1,0 +1,10 @@
+# Others
+numpy
+pandas
+pyarrow
+Unidecode
+colorama
+python-dotenv
+openai
+beautifulsoup4
+Markdown

@@ -1,0 +1,43 @@
+services:
+  app:
+    build: .
+    container_name: utils-testes
+    labels:
+      - "environment=production"
+    
+    # 1. Healthcheck: Verifica se a API está respondendo na porta 8080
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+    # 2. Limites de Recursos: Evita que vazamentos de memória (memory leaks) travem o host
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 512M
+        reservations:
+          memory: 128M
+
+    # 3. Logging: Rotaciona os logs para que não consumam todo o espaço em disco
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+    volumes:
+      - ./data:/data
+      - ./mounted_volume:/mounted_volume
+      - ./secrets:/secrets
+    ports:
+      - "8080:8080"
+    env_file:
+      - secrets/.env
+    environment:
+      - PORT=8080
+      - ON_SERVER=True
+    restart: unless-stopped
