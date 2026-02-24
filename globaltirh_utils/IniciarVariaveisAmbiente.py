@@ -1,13 +1,13 @@
-import logging
 import os
 import re
-import sys
 from typing import Optional
 from dotenv import find_dotenv, load_dotenv
+from .VerificaTipo import deco_verifica_tipo
 
 ENV_PATTERN = re.compile(r"(\w+)\s*=\s*'([^']+)'?")
 
 
+@deco_verifica_tipo
 def inicializar_variaveis_de_ambiente(
     possible_locations: Optional[list[str]] = None, verbose: int = 0
 ) -> bool:
@@ -49,11 +49,13 @@ def inicializar_variaveis_de_ambiente(
     # 1. Tenta encontrar e carregar a partir de um arquivo .env
     if possible_locations:
         for caminho in possible_locations:
-            if find_dotenv(caminho):
+            # usecwd=True evita que o find_dotenv tente inspecionar a stack (o que falha com decorators)
+            found_path = find_dotenv(caminho, usecwd=True)
+            if found_path:
                 if verbose >= 2:
                     print(f"Arquivo .env encontrado no caminho: {caminho}")
 
-                if load_dotenv(caminho):
+                if load_dotenv(found_path):
                     if verbose >= 1:
                         print(
                             "-- IniciarVariaveisAmbiente: Variáveis do arquivo .env carregadas com sucesso!"
