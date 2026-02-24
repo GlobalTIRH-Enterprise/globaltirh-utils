@@ -7,7 +7,7 @@ from .HtmlMkdToText import *
 from .IniciarVariaveisAmbiente import *
 from .LerValidarRequestFiles import *
 from .ListContentIsValid import *
-from .ProcessJoinStrings import *
+from .ProcessaUneStrings import *
 from .StringToBool import *
 from .TempoToBrasilia import *
 from .ValidarGsutilLink import *
