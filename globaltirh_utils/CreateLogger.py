@@ -111,3 +111,5 @@ def create_logger() -> logging.Logger:
     logger.propagate = False
 
     return logger
+
+log = create_logger()
