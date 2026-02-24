@@ -11,3 +11,4 @@ from .ProcessJoinStrings import *
 from .StringToBool import *
 from .TempoToBrasilia import *
 from .ValidarGsutilLink import *
+from .VerificaTipo import *
