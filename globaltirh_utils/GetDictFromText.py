@@ -1,4 +1,5 @@
 from json import loads
+from .VerificaTipo import verifica_tipo
 
 
 def get_dict_from_text(text: str) -> dict:
@@ -21,8 +22,9 @@ def get_dict_from_text(text: str) -> dict:
         ValueError: Se não for possível encontrar um JSON válido no texto.
 
     """
-    start_delimiter = "```json"
-    end_delimiter = "```"
+    verifica_tipo([(text, str, "text")])
+    
+    start_delimiter, end_delimiter = "```json", "```"
 
     start_index = text.find(start_delimiter)
 
