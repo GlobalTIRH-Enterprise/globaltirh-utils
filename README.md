@@ -49,22 +49,27 @@ Abaixo estão listados os módulos e funções disponíveis nesta biblioteca:
 * **Função:** `processa_une_strings(string_list: List[str]) -> str`
 * **Descrição:** Remove duplicatas de uma lista de strings (normalizando por espaços e caixa alta/baixa) e retorna uma única string com os valores únicos unidos.
 
-### 8. Conversão Booleana (`StringToBool`)
+### 8. Salvar Credenciais (`SalvarCredenciais`)
+
+* **Função:** `salvar_credenciais(on_server: bool, usar_google_application_credentials: bool, temporary_folder: str, temporary_file: str, salvar_dividido: bool = False) -> None`
+* **Descrição:** Gera o arquivo JSON de credenciais do Google Cloud a partir de variáveis de ambiente e define a variável `GOOGLE_APPLICATION_CREDENTIALS`. Suporta credenciais completas em JSON ou divididas em variáveis específicas.
+
+### 9. Conversão Booleana (`StringToBool`)
 
 * **Função:** `string_to_bool(s: str | bool) -> bool`
 * **Descrição:** Converte strings como "true", "1", "s", "verdadeiro" (e suas variantes negativas) para valores booleanos (`True`/`False`).
 
-### 9. Conversão de Fuso Horário (`TempoToBrasilia`)
+### 10. Conversão de Fuso Horário (`TempoToBrasilia`)
 
 * **Função:** `tempo_to_brasilia(dt: Union[datetime, float]) -> datetime`
 * **Descrição:** Converte um objeto `datetime` ou timestamp float para o fuso horário de Brasília (`America/Sao_Paulo`).
 
-### 10. Validação de Links Gsutil (`ValidarGsutilLink`)
+### 11. Validação de Links Gsutil (`ValidarGsutilLink`)
 
 * **Função:** `validar_gsutil_link(link: str, quant_parts: int = 4, tipos_verificar: Optional[Set[str]] = None) -> None`
 * **Descrição:** Valida se um link segue o formato `gs://...`, verificando a quantidade de partes do caminho e opcionalmente a extensão do arquivo.
 
-### 11. Validação de Tipos (`VerificaTipo`)
+### 12. Validação de Tipos (`VerificaTipo`)
 
 * **Decorator:** `@deco_verifica_tipo`
 * **Função:** `verifica_tipo(params: list)`
