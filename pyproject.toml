@@ -16,6 +16,9 @@ dependencies = [
     "colorama",
     "python-dotenv",
     "pytz",
+    "google-cloud-bigquery",
+    "google-cloud-storage",
+    "google-genai",
     "PyJWT[crypto]",
     "requests"
 ]
