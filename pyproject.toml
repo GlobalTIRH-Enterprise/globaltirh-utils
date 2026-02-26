@@ -18,7 +18,7 @@ dependencies = [
     "pytz",
     "google-cloud-bigquery",
     "google-cloud-storage",
-    "google-generativeai",
+    "google-genai",
 ]
 classifiers = [
     "Programming Language :: Python :: 3",
