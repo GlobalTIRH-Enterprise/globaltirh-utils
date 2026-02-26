@@ -16,6 +16,8 @@ dependencies = [
     "colorama",
     "python-dotenv",
     "pytz",
+    "PyJWT[crypto]",
+    "requests"
 ]
 classifiers = [
     "Programming Language :: Python :: 3",
