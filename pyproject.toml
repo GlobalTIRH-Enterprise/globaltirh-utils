@@ -19,6 +19,8 @@ dependencies = [
     "google-cloud-bigquery",
     "google-cloud-storage",
     "google-genai",
+    "PyJWT[crypto]",
+    "requests"
 ]
 classifiers = [
     "Programming Language :: Python :: 3",
