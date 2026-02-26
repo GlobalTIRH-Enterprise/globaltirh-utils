@@ -1,6 +1,7 @@
 from .CheckContentIsValid import check_content_is_valid
 from .CreateLogger import log
 from .FormatarTextoIdentificador import formatar_texto_para_identificador
+from .GenerateAccessToken import generate_access_token
 from .GetDictFromText import get_dict_from_text
 from .GuessMimeType import guess_mimetype
 from .IniciarVariaveisAmbiente import inicializar_variaveis_de_ambiente
