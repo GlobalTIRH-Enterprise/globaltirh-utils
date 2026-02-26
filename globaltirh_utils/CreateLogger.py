@@ -1,14 +1,11 @@
 import logging
-from os import getenv, environ
-from typing import Tuple
+from typing import cast
 from colorama import Fore, Style
 
 
 class FormatadorColorido(logging.Formatter):
     """
     Formatter personalizado que adiciona cores ANSI às mensagens de log baseadas no nível de severidade.
-
-    Herda de logging.Formatter e utiliza a biblioteca colorama para colorização.
     """
 
     FORMATO = "%(asctime)s - %(levelname)s - %(filename)s:%(lineno)d - %(message)s"
@@ -22,94 +19,78 @@ class FormatadorColorido(logging.Formatter):
     }
 
     def __init__(self):
-        """Inicializa o formatador com o formato padrão definido na classe."""
         super().__init__(self.FORMATO)
 
     def format(self, record: logging.LogRecord) -> str:
-        """
-        Formata o registro de log, aplicando cor à mensagem.
-
-        Este método modifica temporariamente o atributo `msg` do registro para incluir
-        códigos de cor ANSI e, em seguida, restaura a mensagem original para evitar
-        efeitos colaterais em outros handlers que possam usar o mesmo registro.
-
-        Args:
-            record (logging.LogRecord): O objeto contendo os dados do evento de log.
-
-        Returns:
-            str: A string de log formatada e colorida.
-        """
-        cor = self.MAPA_DE_CORES.get(record.levelno, Fore.WHITE)
-
-        # Guardamos a mensagem original para não modificar o record permanentemente
-        # Isso é crucial se houver múltiplos handlers (ex: um para arquivo e outro para console)
-        msg_original = record.msg
-        record.msg = f"{cor}{msg_original}{Style.RESET_ALL}"
-
+        # A forma mais segura: formata a mensagem completamente com os argumentos primeiro.
         resultado_formatado = super().format(record)
 
-        # Restauramos a mensagem original caso o 'record' seja reutilizado
-        record.msg = msg_original
+        # Pega a cor correspondente ou Branco como padrão
+        cor = self.MAPA_DE_CORES.get(record.levelno, Fore.WHITE)
 
-        return resultado_formatado
+        # Envelopa a linha inteira formatada com as cores ANSI
+        return f"{cor}{resultado_formatado}{Style.RESET_ALL}"
 
 
-def _get_env_logger_data() -> Tuple[str, str]:
+class LogGerenciavel(logging.Logger):
     """
-    Recupera e valida as configurações de log das variáveis de ambiente.
-
-    Busca por 'LOGGER_NAME' e 'LOGGING_LEVEL'. Se não encontrados ou inválidos,
-    aplica valores padrão ('default_globaltirh_utils' e 'INFO') e ajusta o ambiente.
-
-    Returns:
-        Tuple[str, str]: Uma tupla contendo (nome_do_logger, nivel_do_log).
+    Classe de Logger customizada que permite alterar suas configurações
+    em tempo de execução sem perder a referência da memória.
     """
-    nome_logger = getenv("LOGGER_NAME")
-    if nome_logger is None:
-        print("Aviso: LOGGER_NAME não reconhecido, fixando em 'default_globaltirh_utils'")
-        nome_logger = "default_globaltirh_utils"
-        environ["LOGGER_NAME"] = nome_logger  # Define para processos futuros
 
-    nivel_log_str = getenv("LOGGING_LEVEL", "INFO").upper()
+    def set_level(self, logging_level: str) -> None:
+        """
+        Método 'set' para atualizar o nível de severidade do log dinamicamente.
+        """
+        nivel_log_str = logging_level.upper()
+        niveis_validos = {"DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"}
+
+        if nivel_log_str not in niveis_validos:
+            print(f"Aviso: Nível de LOG '{nivel_log_str}' não reconhecido. Mantendo o atual.")
+            return
+
+        novo_nivel = getattr(logging, nivel_log_str)
+        self.setLevel(novo_nivel)
+        self.info(f"Nível de log atualizado para: {nivel_log_str}")
+
+
+# Instruímos o módulo logging do Python a usar nossa classe customizada
+# sempre que um novo logger for instanciado.
+logging.setLoggerClass(LogGerenciavel)
+
+
+def create_logger(
+    logger_name: str = "default_globaltirh_utils", logging_level: str = "INFO"
+) -> LogGerenciavel:
+    """
+    Configura e retorna uma instância do Logger.
+    """
+    nivel_log_str = logging_level.upper()
     niveis_validos = {"DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"}
 
     if nivel_log_str not in niveis_validos:
         print(f"Aviso: Nível de LOG '{nivel_log_str}' não reconhecido, fixando em 'INFO'")
         nivel_log_str = "INFO"
 
-    return nome_logger, nivel_log_str
+    # Usamos cast para evitar alertas falsos de tipagem em IDEs e Linters
+    logger = cast(LogGerenciavel, logging.getLogger(logger_name))
 
-
-def create_logger() -> logging.Logger:
-    """
-    Configura e retorna uma instância de Logger pronta para uso.
-
-    O logger é configurado com um StreamHandler (saída padrão) utilizando o
-    FormatadorColorido. Implementa um padrão singleton básico verificando se
-    o logger já possui handlers para evitar duplicação de logs.
-
-    Returns:
-        logging.Logger: Instância do logger configurado.
-    """
-    nome_logger, nivel_log_str = _get_env_logger_data()
-    logger = logging.getLogger(nome_logger)
-
-    # Evitar handlers duplicados (Idempotência)
-    # Se o logger já tiver handlers, assumimos que já foi configurado e o retornamos.
+    # Idempotência: Se já tem handlers, apenas atualiza o nível e retorna
     if logger.handlers:
+        logger.set_level(nivel_log_str)
         return logger
 
+    # Configuração inicial caso o logger esteja sendo criado pela primeira vez
     nivel_log = getattr(logging, nivel_log_str, logging.INFO)
     logger.setLevel(nivel_log)
 
-    # Configuração do handler de console
     manipulador = logging.StreamHandler()
     manipulador.setFormatter(FormatadorColorido())
     logger.addHandler(manipulador)
-
-    # Impede que o log propague para o logger root (evita duplicidade se o root tiver config)
     logger.propagate = False
 
     return logger
 
+
+# Instância global disponível para importação
 log = create_logger()
