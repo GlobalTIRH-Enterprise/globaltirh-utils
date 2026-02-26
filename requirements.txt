@@ -5,3 +5,5 @@ Unidecode
 colorama
 python-dotenv
 pytz
+PyJWT[crypto]
+requests
