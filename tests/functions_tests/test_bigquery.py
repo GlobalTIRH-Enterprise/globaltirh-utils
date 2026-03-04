@@ -1,6 +1,6 @@
 import unittest
 from unittest.mock import MagicMock, patch
-from globaltirh_utils.functions.cloud.BigQuery import BigQueryHelper
+from functions.cloud.BigQuery import BigQueryHelper
 
 class TestBigQueryHelper(unittest.TestCase):
 

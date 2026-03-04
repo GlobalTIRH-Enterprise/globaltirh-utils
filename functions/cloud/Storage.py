@@ -1,6 +1,6 @@
 from google.cloud import storage
 import tempfile
-from globaltirh_utils.CreateLogger import log
+from utils.CreateLogger import log
 
 from typing import List
 from os import getenv, path

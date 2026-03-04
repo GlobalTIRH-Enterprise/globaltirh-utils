@@ -1,6 +1,6 @@
 import unittest
 from unittest.mock import MagicMock, patch
-from globaltirh_utils.functions.cloud.Storage import StorageManager
+from functions.cloud.Storage import StorageManager
 
 class TestStorageManager(unittest.TestCase):
 

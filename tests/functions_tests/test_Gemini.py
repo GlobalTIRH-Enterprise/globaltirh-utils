@@ -1,6 +1,6 @@
 import unittest
 from unittest.mock import MagicMock, patch, mock_open
-from globaltirh_utils.functions.cloud.Gemini import call_gemini
+from functions.cloud.Gemini import call_gemini
 
 class TestGemini(unittest.TestCase):
 
