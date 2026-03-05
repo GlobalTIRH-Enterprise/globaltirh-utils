@@ -4,7 +4,7 @@ from pathlib import Path
 from typing import Any, Union
 
 
-def volume_read(nome_arquivo: str, IG : Any) -> Union[dict, list, str, bytes, None]:
+def volume_read(nome_arquivo: str, on_server: bool, mounted_volume_name: str) -> Union[dict, list, str, bytes, None]:
     """
     Lê conteúdo de um arquivo no volume, agnóstico à extensão.
     O nome do arquivo deve incluir a extensão (ex: 'dados.json').
@@ -14,12 +14,12 @@ def volume_read(nome_arquivo: str, IG : Any) -> Union[dict, list, str, bytes, No
     file_path = Path(nome_arquivo)
     nome_final = file_path.name
 
-    if IG.on_server:
+    if on_server:
         # No servidor: /volume_name/
-        base_path = Path("/") / IG.mounted_volume_name
+        base_path = Path("/") / mounted_volume_name
     else:
         # Localmente: ./data/volume_name/
-        base_path = Path.cwd() / "data" / IG.mounted_volume_name
+        base_path = Path.cwd() / "data" / mounted_volume_name
 
     caminho_completo = base_path / nome_final
 

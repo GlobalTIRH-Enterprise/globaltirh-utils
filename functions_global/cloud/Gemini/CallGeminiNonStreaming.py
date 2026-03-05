@@ -1,8 +1,8 @@
 from os import getenv
 from typing import List, Union, Optional
 from google.genai import types, Client
-from utils.GuessMimeType import guess_mimetype
-from utils.CreateLogger import log
+from utils_global.GuessMimeType import guess_mimetype
+from utils_global.CreateLogger import log
 
 
 def call_gemini_non_streaming(

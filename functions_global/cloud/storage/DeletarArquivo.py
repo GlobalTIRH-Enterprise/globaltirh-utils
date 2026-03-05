@@ -1,5 +1,5 @@
 from google.cloud import storage
-from utils.CreateLogger import log
+from utils_global.CreateLogger import log
 from GetBucket import get_bucket
 
 

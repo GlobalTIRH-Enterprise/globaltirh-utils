@@ -1,5 +1,5 @@
 from google.cloud import bigquery
-from utils.CreateLogger import log
+from utils_global.CreateLogger import log
 from typing import List, Dict, Any
 
 

@@ -3,8 +3,7 @@ import os
 from pathlib import Path
 from typing import Any
 
-
-def volume_write(nome_arquivo: str, content: Any,  IG : Any) -> None:
+def volume_write(nome_arquivo: str, content: Any, on_server: bool, mounted_volume_name: str, mounted_volume_read_only:str) -> None:
     """
     Salva conteúdo em um arquivo no volume, agnóstico à extensão.
     O nome do arquivo deve incluir a extensão (ex: 'dados.json', 'log.txt').
@@ -15,15 +14,15 @@ def volume_write(nome_arquivo: str, content: Any,  IG : Any) -> None:
     file_path = Path(nome_arquivo)
     nome_final = file_path.name # Usa o nome completo com extensão
 
-    if IG.on_server:
-        if IG.mounted_volume_read_only:
+    if on_server:
+        if mounted_volume_read_only:
             raise PermissionError("Volume configurado como apenas leitura!")
         
         # No servidor: /volume_name/
-        base_path = Path("/") / IG.mounted_volume_name
+        base_path = Path("/") / mounted_volume_name
     else:
         # Localmente: ./data/volume_name/
-        base_path = Path.cwd() / "data" / IG.mounted_volume_name
+        base_path = Path.cwd() / "data" / mounted_volume_name
 
     try:
         # Cria a árvore de diretórios se não existir
