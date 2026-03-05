@@ -4,7 +4,8 @@ from google.genai import types, Client
 from utils.GuessMimeType import guess_mimetype
 from utils.CreateLogger import log
 
-def call_gemini_streaming(
+
+def call_gemini_non_streaming(
     prompt: str,
     project: str,
     location: str,
@@ -14,7 +15,7 @@ def call_gemini_streaming(
     return_only_text: bool = True,
 ):
     """
-    Chama Gemini (google-genai) com streaming ativado.
+    Chama Gemini (google-genai) sem streaming (modo síncrono).
 
     Args:
         prompt: Texto do prompt.
@@ -23,13 +24,13 @@ def call_gemini_streaming(
         model_name: Nome do modelo Gemini (ex.: gemini-1.5-pro).
         arquivos: Lista ou string com caminhos para arquivos (locais ou gs://).
         generation_config: Configuração de geração opcional.
-        return_only_text: Se True, retorna apenas o texto concatenado; caso contrário, retorna o objeto stream.
+        return_only_text: Se True, retorna apenas o texto; caso contrário, retorna o objeto resposta completo.
 
     Returns:
         Se return_only_text for True, retorna uma string com o texto gerado.
-        Caso contrário, retorna o objeto gerador do stream.
+        Caso contrário, retorna o objeto `GenerateContentResponse`.
     """
-    client = Client(vertexai=True, project=project_id, location=location)
+    client = Client(vertexai=True, project=project, location=location)
 
     contents: List[Union[str, types.Part]] = [prompt]
 
@@ -56,16 +57,12 @@ def call_gemini_streaming(
                 raise
 
     try:
-        stream_obj = client.models.generate_content_stream(
+        resp = client.models.generate_content(
             model=model_name,
             contents=contents,
             config=generation_config
         )
-        if return_only_text:
-            return "".join(chunk.text or "" for chunk in stream_obj if getattr(chunk, "text", None))
-        return stream_obj
+        return resp.text if return_only_text else resp
     except Exception as e:
-        log.error(f"Erro ao chamar o modelo Gemini com streaming: {e}", exc_info=True)
+        log.error(f"Erro ao chamar o modelo Gemini: {e}", exc_info=True)
         raise
-
-
