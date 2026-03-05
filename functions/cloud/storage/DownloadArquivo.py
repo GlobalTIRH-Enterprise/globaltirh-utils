@@ -1,6 +1,6 @@
 import tempfile
 from google.cloud import storage
-from utils.CreateLogger import log
+from globaltirh_utils.CreateLogger import log
 from GetBucket import get_bucket
 
 def download_arquivo(

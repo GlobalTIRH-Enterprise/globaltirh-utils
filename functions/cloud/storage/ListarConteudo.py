@@ -1,5 +1,5 @@
 from google.cloud import storage
-from utils.CreateLogger import log
+from globaltirh_utils.CreateLogger import log
 from typing import List, Optional
 from GetBucket import get_bucket
 
