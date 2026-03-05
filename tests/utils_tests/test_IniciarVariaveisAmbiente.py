@@ -6,7 +6,7 @@ import os
 # Adiciona o diretório raiz ao path para importar o pacote globaltirh_utils
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-from globaltirh_utils.IniciarVariaveisAmbiente import inicializar_variaveis_de_ambiente
+from utils.IniciarVariaveisAmbiente import inicializar_variaveis_de_ambiente
 
 
 class TestIniciarVariaveisAmbiente(unittest.TestCase):
