@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import MagicMock, patch, mock_open
 
-from functions.cloud.Gemini import (
+from functions_global.cloud.Gemini import (
     call_gemini_non_streaming,
     call_gemini_streaming,
 )

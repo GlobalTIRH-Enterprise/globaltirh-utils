@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import MagicMock, patch
 
-from functions.cloud.storage import (
+from functions_global.cloud.storage import (
     upload_file_to_gcs,
     listar_conteudo,
     deletar_arquivo,
