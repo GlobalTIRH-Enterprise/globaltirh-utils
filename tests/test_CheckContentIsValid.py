@@ -5,7 +5,7 @@ import os
 # Adiciona o diretório raiz ao path para importar o pacote globaltirh_utils
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-from utils.CheckContentIsValid import check_content_is_valid
+from globaltirh_utils.CheckContentIsValid import check_content_is_valid
 
 
 class TestCheckContentIsValid(unittest.TestCase):
