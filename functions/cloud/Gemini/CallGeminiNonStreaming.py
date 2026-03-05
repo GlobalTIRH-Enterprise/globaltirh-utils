@@ -7,7 +7,7 @@ from utils.CreateLogger import log
 
 def call_gemini_non_streaming(
     prompt: str,
-    project_id: str,
+    project: str,
     location: str,
     model_name: str,
     arquivos: Union[List[str], str, None] = None,
