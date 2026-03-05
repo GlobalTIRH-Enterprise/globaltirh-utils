@@ -1,23 +1,23 @@
-import tempfile
 from google.cloud import storage
-from utils.CreateLogger import log
+from globaltirh_utils.CreateLogger import log
 from GetBucket import get_bucket
 
-def download_arquivo(
+
+def deletar_arquivo(
     client: storage.Client,
     bucket_name: str,
     nome_arquivo: str
-) -> str:
+) -> bool:
     """
-    Faz download de um arquivo do bucket para um arquivo temporário local.
+    Exclui um arquivo do bucket.
 
     Args:
         client: Cliente autenticado do Google Cloud Storage.
         bucket_name: Nome do bucket.
-        nome_arquivo: Nome do blob a ser baixado.
+        nome_arquivo: Nome do blob a ser excluído.
 
     Returns:
-        Caminho absoluto do arquivo temporário local.
+        True se a exclusão for bem-sucedida.
 
     Raises:
         FileNotFoundError: Se o arquivo não existir.
@@ -27,8 +27,6 @@ def download_arquivo(
     blob = bucket.blob(nome_arquivo)
     if not blob.exists():
         raise FileNotFoundError(f"Arquivo '{nome_arquivo}' não encontrado no bucket '{bucket_name}'")
-    temp_file = tempfile.NamedTemporaryFile(delete=False)
-    blob.download_to_filename(temp_file.name)
-    temp_file.close()
-    log.info(f"Arquivo '{nome_arquivo}' baixado para {temp_file.name}")
-    return temp_file.name
+    blob.delete()
+    log.info(f"Arquivo '{nome_arquivo}' excluído de gs://{bucket_name}/{nome_arquivo}")
+    return True

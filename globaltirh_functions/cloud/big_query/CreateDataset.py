@@ -1,5 +1,5 @@
 from google.cloud import bigquery
-from utils.CreateLogger import log
+from globaltirh_utils.CreateLogger import log
 from typing import Optional
 
 
