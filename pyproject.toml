@@ -33,5 +33,4 @@ classifiers = [
 "Bug Tracker" = "https://github.com/GlobalTIRH-Enterprise/globaltirh-utils/issues"
 
 [tool.setuptools.packages.find]
-where = ["."]
-include = ["functions*", "utils*"]
+include = ["globaltirh_utils*"]
