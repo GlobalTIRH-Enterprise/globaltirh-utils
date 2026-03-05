@@ -1,10 +1,10 @@
 import unittest
 from unittest.mock import MagicMock, patch
-from globaltirh_utils.functions.cloud.BigQuery import BigQueryHelper
+from functions_global.cloud.BigQuery import BigQueryHelper
 
 class TestBigQueryHelper(unittest.TestCase):
 
-    @patch("globaltirh_utils.functions.cloud.BigQuery.bigquery.Client")
+    @patch("utils_global.functions_global.cloud.BigQuery.bigquery.Client")
     def setUp(self, mock_client):
         self.project_id = "test-project"
         self.bq_helper = BigQueryHelper(self.project_id)

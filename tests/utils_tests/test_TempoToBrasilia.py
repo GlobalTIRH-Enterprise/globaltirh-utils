@@ -3,7 +3,7 @@ from datetime import datetime, timezone
 import sys
 import os
 
-# Adiciona o diretório raiz ao path para importar o pacote utils_global
+# Adiciona o diretório raiz ao path para importar o pacote globaltirh_utils
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from utils_global.TempoToBrasilia import tempo_to_brasilia

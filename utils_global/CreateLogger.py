@@ -59,15 +59,15 @@ def _get_env_logger_data() -> Tuple[str, str]:
     Recupera e valida as configurações de log das variáveis de ambiente.
 
     Busca por 'LOGGER_NAME' e 'LOGGING_LEVEL'. Se não encontrados ou inválidos,
-    aplica valores padrão ('default_globaltirh_utils' e 'INFO') e ajusta o ambiente.
+    aplica valores padrão ('default_utils_global' e 'INFO') e ajusta o ambiente.
 
     Returns:
         Tuple[str, str]: Uma tupla contendo (nome_do_logger, nivel_do_log).
     """
     nome_logger = getenv("LOGGER_NAME")
     if nome_logger is None:
-        print("Aviso: LOGGER_NAME não reconhecido, fixando em 'default_globaltirh_utils'")
-        nome_logger = "default_globaltirh_utils"
+        print("Aviso: LOGGER_NAME não reconhecido, fixando em 'default_utils_global'")
+        nome_logger = "default_utils_global"
         environ["LOGGER_NAME"] = nome_logger  # Define para processos futuros
 
     nivel_log_str = getenv("LOGGING_LEVEL", "INFO").upper()

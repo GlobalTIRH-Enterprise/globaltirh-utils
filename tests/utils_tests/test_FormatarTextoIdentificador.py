@@ -2,7 +2,7 @@ import unittest
 import sys
 import os
 
-# Adiciona o diretório raiz ao path para importar o pacote utils_global
+# Adiciona o diretório raiz ao path para importar o pacote globaltirh_utils
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from utils_global.FormatarTextoIdentificador import formatar_texto_para_identificador

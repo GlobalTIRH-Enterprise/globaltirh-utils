@@ -1,10 +1,10 @@
 import unittest
 from unittest.mock import MagicMock, patch
-from globaltirh_utils.functions.cloud.Storage import StorageManager
+from utils_global.functions_global.cloud.Storage import StorageManager
 
 class TestStorageManager(unittest.TestCase):
 
-    @patch("globaltirh_utils.functions.cloud.Storage.storage.Client")
+    @patch("utils_global.functions_global.cloud.Storage.storage.Client")
     def setUp(self, mock_client_cls):
         self.mock_client = mock_client_cls.return_value
         self.storage_manager = StorageManager(bucket_name="default-bucket")
@@ -17,7 +17,7 @@ class TestStorageManager(unittest.TestCase):
         self.storage_manager.get_bucket("other-bucket")
         self.mock_client.bucket.assert_called_with("other-bucket")
 
-    @patch("globaltirh_utils.functions.cloud.Storage.path.join")
+    @patch("utils_global.functions_global.cloud.Storage.path.join")
     def test_upload_file_to_gcs_success(self, mock_path_join):
         mock_path_join.return_value = "/tmp/file.txt"
         
@@ -82,7 +82,7 @@ class TestStorageManager(unittest.TestCase):
         with self.assertRaises(FileNotFoundError):
             self.storage_manager.deletar_arquivo("file.txt")
 
-    @patch("globaltirh_utils.functions.cloud.Storage.tempfile.NamedTemporaryFile")
+    @patch("utils_global.functions_global.cloud.Storage.tempfile.NamedTemporaryFile")
     def test_download_arquivo(self, mock_tempfile):
         mock_bucket = MagicMock()
         mock_blob = MagicMock()

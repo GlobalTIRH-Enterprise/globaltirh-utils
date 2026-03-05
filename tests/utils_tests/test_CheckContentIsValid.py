@@ -2,7 +2,7 @@ import unittest
 import sys
 import os
 
-# Adiciona o diretório raiz ao path para importar o pacote utils_global
+# Adiciona o diretório raiz ao path para importar o pacote globaltirh_utils
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from utils_global.CheckContentIsValid import check_content_is_valid
@@ -34,3 +34,4 @@ class TestCheckContentIsValid(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)
+    

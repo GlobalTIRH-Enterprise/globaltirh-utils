@@ -3,7 +3,7 @@ from unittest.mock import patch
 import sys
 import os
 
-# Adiciona o diretório raiz ao path para importar o pacote utils_global
+# Adiciona o diretório raiz ao path para importar o pacote globaltirh_utils
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from utils_global.IniciarVariaveisAmbiente import inicializar_variaveis_de_ambiente
@@ -11,8 +11,8 @@ from utils_global.IniciarVariaveisAmbiente import inicializar_variaveis_de_ambie
 
 class TestIniciarVariaveisAmbiente(unittest.TestCase):
 
-    # @patch("utils_global.IniciarVariaveisAmbiente.load_dotenv")
-    # @patch("utils_global.IniciarVariaveisAmbiente.os.path.exists")
+    # @patch("globaltirh_utils.IniciarVariaveisAmbiente.load_dotenv")
+    # @patch("globaltirh_utils.IniciarVariaveisAmbiente.os.path.exists")
     # def test_inicializar_variaveis_de_ambiente_sucesso(self, mock_exists, mock_load_dotenv):
     #     """Teste de sucesso encontrando arquivo .env."""
     #     mock_exists.return_value = True

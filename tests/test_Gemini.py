@@ -1,11 +1,11 @@
 import unittest
 from unittest.mock import MagicMock, patch, mock_open
-from globaltirh_utils.functions.cloud.Gemini import call_gemini
+from functions_global.cloud.Gemini import call_gemini
 
 class TestGemini(unittest.TestCase):
 
-    @patch("globaltirh_utils.functions.cloud.Gemini.Client")
-    @patch("globaltirh_utils.functions.cloud.Gemini.types")
+    @patch("utils_global.functions_global.cloud.Gemini.Client")
+    @patch("utils_global.functions_global.cloud.Gemini.types")
     def test_call_gemini_simple_text(self, mock_types, mock_client_cls):
         mock_client = mock_client_cls.return_value
         mock_response = MagicMock()
@@ -22,10 +22,10 @@ class TestGemini(unittest.TestCase):
         self.assertEqual(resp, "Resposta Gemini")
         mock_client.models.generate_content.assert_called_once()
 
-    @patch("globaltirh_utils.functions.cloud.Gemini.Client")
-    @patch("globaltirh_utils.functions.cloud.Gemini.guess_mimetype")
+    @patch("utils_global.functions_global.cloud.Gemini.Client")
+    @patch("utils_global.functions_global.cloud.Gemini.guess_mimetype")
     @patch("builtins.open", new_callable=mock_open, read_data=b"dados_arquivo")
-    @patch("globaltirh_utils.functions.cloud.Gemini.types")
+    @patch("utils_global.functions_global.cloud.Gemini.types")
     def test_call_gemini_with_local_file(self, mock_types, mock_file, mock_guess_mime, mock_client_cls):
         mock_guess_mime.return_value = "application/pdf"
         
@@ -45,9 +45,9 @@ class TestGemini(unittest.TestCase):
         # Verifica se tentou criar a Part a partir dos bytes
         mock_types.Part.from_bytes.assert_called_with(data=b"dados_arquivo", mime_type="application/pdf")
 
-    @patch("globaltirh_utils.functions.cloud.Gemini.Client")
-    @patch("globaltirh_utils.functions.cloud.Gemini.guess_mimetype")
-    @patch("globaltirh_utils.functions.cloud.Gemini.types")
+    @patch("utils_global.functions_global.cloud.Gemini.Client")
+    @patch("utils_global.functions_global.cloud.Gemini.guess_mimetype")
+    @patch("utils_global.functions_global.cloud.Gemini.types")
     def test_call_gemini_with_gcs_file(self, mock_types, mock_guess_mime, mock_client_cls):
         mock_guess_mime.return_value = "image/png"
         
@@ -62,7 +62,7 @@ class TestGemini(unittest.TestCase):
         # Verifica se tentou criar a Part a partir da URI
         mock_types.Part.from_uri.assert_called_with(file_uri="gs://bucket/imagem.png", mime_type="image/png")
 
-    @patch("globaltirh_utils.functions.cloud.Gemini.Client")
+    @patch("utils_global.functions_global.cloud.Gemini.Client")
     def test_call_gemini_stream(self, mock_client_cls):
         mock_client = mock_client_cls.return_value
         
