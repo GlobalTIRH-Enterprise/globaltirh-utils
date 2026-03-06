@@ -1,29 +1,37 @@
 from os import getenv
 from typing import List, Union, Optional
 from google.genai import types, Client
-from globaltirh_utils.GuessMimeType import guess_mimetype
-from globaltirh_utils.CreateLogger import log
+from utils_global.GuessMimeType import guess_mimetype
+from utils_global.CreateLogger import log
 
-
+  
+  
 def call_gemini(
     prompt: str,
-    project_id: str,
+    project: str,
     location: str,
     model_name: str,
     arquivos: Union[List[str], str, None] = None,
     generation_config: Optional[types.GenerateContentConfig] = None,
-    stream: bool = False,
     return_only_text: bool = True,
 ):
-    """Chama Gemini (google-genai) com prompt + anexos (gs:// ou locais)."""
-    
-    # model_name e generation_config devem ser passados explicitamente se necessário
+    """
+    Chama Gemini (google-genai) sem streaming (modo síncrono).
 
-    client = Client(
-        vertexai=True,
-        project=project_id,
-        location=location
-    )
+    Args:
+        prompt: Texto do prompt.
+        project_id: ID do projeto Google Cloud.
+        location: Localização (ex.: us-central1).
+        model_name: Nome do modelo Gemini (ex.: gemini-1.5-pro).
+        arquivos: Lista ou string com caminhos para arquivos (locais ou gs://).
+        generation_config: Configuração de geração opcional.
+        return_only_text: Se True, retorna apenas o texto; caso contrário, retorna o objeto resposta completo.
+
+    Returns:
+        Se return_only_text for True, retorna uma string com o texto gerado.
+        Caso contrário, retorna o objeto `GenerateContentResponse`.
+    """
+    client = Client(vertexai=True, project=project, location=location)
 
     contents: List[Union[str, types.Part]] = [prompt]
 
@@ -32,18 +40,17 @@ def call_gemini(
             mime = guess_mimetype(arq)
             try:
                 if arq.startswith("gs://"):
-                    if not mime: 
+                    if not mime:
                         raise ValueError(f"Não foi possível inferir MIME: {arq}")
                     contents.append(types.Part.from_uri(file_uri=arq, mime_type=mime))
                 elif mime == "text/plain":
                     with open(arq, "r", encoding="utf-8") as f:
                         contents.append(f.read())
                 else:
-                    if not mime: 
+                    if not mime:
                         raise ValueError(f"Não foi possível inferir MIME: {arq}")
                     with open(arq, "rb") as f:
                         contents.append(types.Part.from_bytes(data=f.read(), mime_type=mime))
-                        
             except FileNotFoundError:
                 raise FileNotFoundError(f"Arquivo não encontrado: {arq}")
             except Exception as e:
@@ -51,24 +58,12 @@ def call_gemini(
                 raise
 
     try:
-        if stream:
-            stream_obj = client.models.generate_content_stream(
-                model=model_name, 
-                contents=contents,
-                config=generation_config
-            )
-            if return_only_text:
-                return "".join(chunk.text or "" for chunk in stream_obj if getattr(chunk, "text", None))
-            return stream_obj
-        
-        else:
-            resp = client.models.generate_content(
-                model=model_name, 
-                contents=contents,
-                config=generation_config
-            )
-            return resp.text if return_only_text else resp
-        
+        resp = client.models.generate_content(
+            model=model_name,
+            contents=contents,
+            config=generation_config
+        )
+        return resp.text if return_only_text else resp
     except Exception as e:
         log.error(f"Erro ao chamar o modelo Gemini: {e}", exc_info=True)
         raise
