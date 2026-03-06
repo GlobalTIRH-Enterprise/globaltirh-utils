@@ -6,7 +6,7 @@ from utils_global.CreateLogger import log
 
   
   
-def call_gemini_non_streaming(
+def call_gemini(
     prompt: str,
     project: str,
     location: str,
