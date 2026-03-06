@@ -1,102 +1,638 @@
 # globaltirh-utils
 
-Repositório de Utilidades para Globaltirh
+Repositório de utilidades para projetos da **GlobalTIRH**.
 
-Este repositório contém uma coleção de funções e classes utilitárias para lidar com validações, formatações e tratamento de dados comuns em projetos da Globaltirh.
+Este pacote fornece um conjunto de funções utilitárias para integração com serviços do **Google Cloud Platform (GCP)** e ferramentas auxiliares para manipulação de dados, validação, formatação, autenticação e logging.
 
-## Instalação
+O objetivo da biblioteca é **padronizar operações comuns utilizadas nos projetos da organização**, facilitando reutilização de código e reduzindo duplicação de lógica.
+
+O import do pacote globaltirh-utils está presente somente nos seguintes repositórios:
+
+Compara-es-Gemini
+
+Backend-SES-SaudeDigital
+
+ses-go-portal-transparencia
+
+---
+
+# Instalação
+
+O pacote pode ser instalado diretamente do repositório GitHub utilizando `pip`.
 
 ```bash
 pip install git+https://github.com/GlobalTIRH-Enterprise/globaltirh-utils.git@deploy
 ```
 
-## Utilitários Disponíveis
-
-Abaixo estão listados os módulos e funções disponíveis nesta biblioteca:
-
-### 1. Interação com BigQuery (`BigQuery`)
-
-* **Classe:** `BigQueryHelper`
-* **Descrição:** Classe auxiliar para interagir com o Google BigQuery. Permite criar datasets e tabelas, inserir dados, executar queries (retornando listas ou DataFrames) e gerenciar recursos.
-
-### 2. Validação de Conteúdo (`CheckContentIsValid`)
-
-* **Função:** `check_content_is_valid(content: list) -> None`
-* **Descrição:** Valida a estrutura de uma lista de conteúdos (geralmente usada para histórico de chat). Verifica se cada item é um dicionário contendo as chaves obrigatórias `role` (user/model) e `parts`.
-
-### 3. Formatação de Logs (`CreateLogger`)
-
-* **Classe:** `FormatadorColorido`
-* **Descrição:** Um `logging.Formatter` personalizado que adiciona cores ANSI às mensagens de log baseadas no nível de severidade (DEBUG, INFO, WARNING, ERROR, CRITICAL).
-
-### 4. Formatação de Identificadores (`FormatarTextoIdentificador`)
-
-* **Função:** `formatar_texto_para_identificador(text: str) -> str`
-* **Descrição:** Transforma uma string em um identificador seguro. Remove acentos, pontuações, substitui espaços por underscores e converte para minúsculas.
-
-### 5. Integração com Gemini (`Gemini`)
-
-* **Função:** `call_gemini(prompt: str, project_id: str, location: str, model_name: str, ...)`
-* **Descrição:** Função para interagir com o modelo Gemini (Google GenAI). Suporta envio de prompts com anexos (locais ou GCS), streaming de resposta e configuração de geração.
-
-### 6. Extração de JSON (`GetDictFromText`)
-
-* **Função:** `get_dict_from_text(text: str) -> dict`
-* **Descrição:** Tenta extrair e converter um bloco JSON contido em uma string de texto. Suporta blocos de código Markdown (` ```json ... ``` `) ou busca direta por chaves `{}`.
-
-### 7. Geração de Token de Acesso (`GenerateAccessToken`)
-
-* **Função:** `generate_access_token(client_email: str, private_key_id: str, private_key: str, scope: str, expires_in: int = 3600) -> str`
-* **Descrição:** Gera um token OAuth 2.0 via conta de serviço Google, assinando um JWT e trocando por Access Token.
-
-### 8. Inferência de MIME Type (`GuessMimeType`)
-
-* **Função:** `guess_mimetype(path: str) -> Optional[str]`
-* **Descrição:** Infere o tipo MIME de um arquivo com base no seu caminho ou nome. Possui fallbacks para PDF e arquivos de texto caso a detecção nativa do sistema falhe.
-
-### 9. Variáveis de Ambiente (`IniciarVariaveisAmbiente`)
-
-* **Função:** `inicializar_variaveis_de_ambiente(possible_locations: Optional[list[str]] = None, verbose: int = 0) -> bool`
-* **Descrição:** Carrega variáveis de ambiente a partir de arquivos `.env` ou de strings de configuração. Busca em locais padrão ou personalizados.
-
-### 10. Processamento de Strings (`ProcessaUneStrings`)
-
-* **Função:** `processa_une_strings(string_list: List[str]) -> str`
-* **Descrição:** Remove duplicatas de uma lista de strings (normalizando por espaços e caixa alta/baixa) e retorna uma única string com os valores únicos unidos.
-
-### 11. Salvar Credenciais (`SalvarCredenciais`)
-
-* **Função:** `salvar_credenciais(on_server: bool, usar_google_application_credentials: bool, temporary_folder: str, temporary_file: str, salvar_dividido: bool = False) -> None`
-* **Descrição:** Gera o arquivo JSON de credenciais do Google Cloud a partir de variáveis de ambiente e define a variável `GOOGLE_APPLICATION_CREDENTIALS`. Suporta credenciais completas em JSON ou divididas em variáveis específicas.
-
-### 12. Gerenciamento de Storage (`Storage`)
-
-* **Classe:** `StorageManager`
-* **Descrição:** Classe para gerenciamento de arquivos no Google Cloud Storage. Facilita upload, download, listagem, exclusão e obtenção de metadados de arquivos.
-
-### 13. Conversão Booleana (`StringToBool`)
-
-* **Função:** `string_to_bool(s: str | bool) -> bool`
-* **Descrição:** Converte strings como "true", "1", "s", "verdadeiro" (e suas variantes negativas) para valores booleanos (`True`/`False`).
-
-### 14. Conversão de Fuso Horário (`TempoToBrasilia`)
-
-* **Função:** `tempo_to_brasilia(dt: Union[datetime, float]) -> datetime`
-* **Descrição:** Converte um objeto `datetime` ou timestamp float para o fuso horário de Brasília (`America/Sao_Paulo`).
-
-### 15. Validação de Links Gsutil (`ValidarGsutilLink`)
-
-* **Função:** `validar_gsutil_link(link: str, quant_parts: int = 4, tipos_verificar: Optional[Set[str]] = None) -> None`
-* **Descrição:** Valida se um link segue o formato `gs://...`, verificando a quantidade de partes do caminho e opcionalmente a extensão do arquivo.
-
-### 16. Validação de Tipos (`VerificaTipo`)
-
-* **Decorator:** `@deco_verifica_tipo`
-* **Função:** `verifica_tipo(params: list)`
-* **Descrição:** Fornece um decorator e uma função auxiliar para validar dinamicamente os tipos dos argumentos passados para funções, baseando-se nas anotações de tipo (type hints).
+Após a instalação, os módulos ficam disponíveis para importação nos projetos Python.
 
 ---
 
-## Testes
+# Estrutura do Pacote
 
-O repositório conta com uma suíte de testes unitários para garantir o funcionamento correto de cada utilitário. Os arquivos de teste podem ser encontrados no diretório `tests/`.
+A biblioteca é organizada em dois módulos principais:
+
+- **functions_global** → funções relacionadas a integrações com serviços cloud  
+- **utils_global** → utilidades gerais usadas em diversos projetos
+
+```
+functions_global/
+├── cloud/
+│   ├── big_query/      # Integração com Google BigQuery
+│   ├── gemini/         # Integração com modelos Gemini (Vertex AI)
+│   └── storage/        # Operações com Google Cloud Storage
+
+utils_global/
+```
+
+---
+
+# Funcionalidades
+
+## 1. Integração com Google BigQuery
+
+Módulo:
+
+```
+functions_global.cloud.big_query
+```
+
+Fornece funções utilitárias para gerenciamento de datasets, tabelas e execução de consultas no **Google BigQuery**.
+
+### Funções disponíveis
+
+#### create_dataset
+
+Arquivo: `CreateDataset.py`
+
+```python
+create_dataset(client, dataset_id, location="US", description=None)
+```
+
+Cria um dataset no BigQuery.
+
+Retorno:
+- `True` caso o dataset seja criado ou já exista.
+
+---
+
+#### create_table
+
+Arquivo: `CreateTable.py`
+
+```python
+create_table(client, dataset_id, table_id, schema)
+```
+
+Cria uma tabela dentro de um dataset com o schema informado.
+
+---
+
+#### insert_data
+
+Arquivo: `InsertData.py`
+
+```python
+insert_data(client, dataset_id, table_id, rows_to_insert, schema)
+```
+
+Insere dados em uma tabela do BigQuery.
+
+Retorno:
+- Lista de erros caso existam falhas na inserção.
+
+---
+
+#### delete_table
+
+Arquivo: `DeleteTable.py`
+
+```python
+delete_table(client, dataset_id, table_id, must_exist=False)
+```
+
+Remove uma tabela do dataset.
+
+---
+
+#### get_data
+
+Arquivo: `GetData.py`
+
+```python
+get_data(client, dataset_id, table_id, where_clauses=None, limit=0)
+```
+
+Executa consulta em uma tabela do BigQuery com filtros opcionais.
+
+---
+
+#### run_select_query
+
+Arquivo: `RunSelectQuery.py`
+
+```python
+run_select_query(client, query, output_format="list")
+```
+
+Executa uma query `SELECT` no BigQuery.
+
+Retorno pode ser:
+
+- `list` → lista de dicionários  
+- `DataFrame` → dataframe do pandas
+
+---
+
+# 2. Google Cloud Storage
+
+Módulo:
+
+```
+functions_global.cloud.storage
+```
+
+Fornece funções para manipulação de arquivos no **Google Cloud Storage (GCS)**.
+
+### Funções disponíveis
+
+#### get_bucket
+
+Arquivo: `GetBucket.py`
+
+```python
+get_bucket(client, bucket_name)
+```
+
+Obtém uma referência para um bucket existente.
+
+Caso o bucket não exista, uma exceção é lançada.
+
+---
+
+#### upload_file_to_gcs
+
+Arquivo: `UploadFileToGcs.py`
+
+```python
+upload_file_to_gcs(client, bucket_name, filename, destination_blob_name, temporary_folder=None)
+```
+
+Realiza upload de um arquivo local para o bucket.
+
+Retorno:
+
+```
+gs://bucket/path/file
+```
+
+---
+
+#### listar_conteudo
+
+Arquivo: `ListarConteudo.py`
+
+```python
+listar_conteudo(client, bucket_name, prefixo=None)
+```
+
+Lista arquivos do bucket e retorna metadados.
+
+---
+
+#### deletar_arquivo
+
+Arquivo: `DeletarArquivo.py`
+
+```python
+deletar_arquivo(client, bucket_name, nome_arquivo)
+```
+
+Remove um arquivo do bucket.
+
+---
+
+#### download_arquivo
+
+Arquivo: `DownloadArquivo.py`
+
+```python
+download_arquivo(client, bucket_name, nome_arquivo)
+```
+
+Baixa um arquivo para um diretório temporário.
+
+Retorno:
+- Caminho local do arquivo.
+
+---
+
+#### obter_metadados
+
+Arquivo: `ObterMetadados.py`
+
+```python
+obter_metadados(client, bucket_name, nome_arquivo)
+```
+
+Retorna metadados de um arquivo.
+
+---
+
+#### valida_existencia_do_arquivo
+
+Arquivo: `ValidaExistenciaDoArquivo.py`
+
+```python
+valida_existencia_do_arquivo(client, bucket_name, nome_arquivo)
+```
+
+Verifica se o arquivo existe no bucket.
+
+Retorno:
+
+- objeto `Blob` caso exista  
+- exceção caso não exista
+
+---
+
+# 3. Google Gemini (Vertex AI)
+
+Módulo:
+
+```
+functions_global.cloud.gemini
+```
+
+Integração com modelos **Gemini da Vertex AI**, com suporte a prompts, anexos e streaming de resposta.
+
+---
+
+### call_gemini_non_streaming
+
+Arquivo: `CallGemini.py`
+
+```python
+call_gemini_non_streaming(
+    prompt,
+    project_id,
+    location,
+    model_name,
+    arquivos=None,
+    generation_config=None,
+    return_only_text=True
+)
+```
+
+Executa chamada síncrona ao modelo Gemini.
+
+---
+
+### call_gemini_streaming
+
+Arquivo: `CallGeminiStreaming.py`
+
+```python
+call_gemini_streaming(
+    prompt,
+    project_id,
+    location,
+    model_name,
+    arquivos=None,
+    generation_config=None,
+    return_only_text=True
+)
+```
+
+Executa chamada com **streaming de resposta**.
+
+---
+
+# 4. Utilitários Gerais
+
+Módulo:
+
+```
+utils_global
+```
+
+Contém diversas funções auxiliares reutilizáveis.
+
+---
+
+## CheckContentsValid
+
+Arquivo:
+
+```
+CheckContentsValid.py
+```
+
+```python
+check_content_is_valid(content: list)
+```
+
+Valida estrutura de lista de mensagens (`role` e `parts`).
+
+---
+
+## CreateLogger
+
+Arquivo:
+
+```
+CreateLogger.py
+```
+
+Fornece um logger configurado com cores ANSI.
+
+Componentes:
+
+- `FormatadorColorido`
+- `log`
+
+---
+
+## FormatarTextoIdentificador
+
+Arquivo:
+
+```
+FormatarTextoIdentificador.py
+```
+
+```python
+formatar_texto_para_identificador(text: str) -> str
+```
+
+Remove acentos, substitui espaços por `_` e converte para minúsculas.
+
+Exemplo:
+
+```
+"Nome do Arquivo" -> "nome_do_arquivo"
+```
+
+---
+
+## GenerateAccessToken
+
+Arquivo:
+
+```
+GenerateAccessToken.py
+```
+
+```python
+generate_access_token(
+    client_email,
+    private_key_id,
+    private_key,
+    scope,
+    expires_in=3600
+)
+```
+
+Gera **access token OAuth2** usando credenciais de conta de serviço.
+
+---
+
+## GetDictFromText
+
+Arquivo:
+
+```
+GetDictFromText.py
+```
+
+```python
+get_dict_from_text(text: str) -> dict
+```
+
+Extrai JSON de textos, incluindo blocos ```json.
+
+---
+
+## GuessMimeType
+
+Arquivo:
+
+```
+GuessMimeType.py
+```
+
+```python
+guess_mimetype(path: str)
+```
+
+Detecta automaticamente o tipo MIME de um arquivo.
+
+---
+
+## IniciarVariaveisAmbiente
+
+Arquivo:
+
+```
+IniciarVariaveisAmbiente.py
+```
+
+```python
+inicializar_variaveis_de_ambiente(possible_locations=None, verbose=0)
+```
+
+Carrega automaticamente arquivos `.env`.
+
+---
+
+## ProcessaUneStrings
+
+Arquivo:
+
+```
+ProcessaUneStrings.py
+```
+
+```python
+processa_une_strings(string_list)
+```
+
+Remove duplicatas e concatena strings únicas.
+
+---
+
+## SalvarCredenciais
+
+Arquivo:
+
+```
+SalvarCredenciais.py
+```
+
+```python
+salvar_credenciais(
+    on_server,
+    usar_google_application_credentials,
+    temporary_folder,
+    temporary_file,
+    salvar_dividido=False
+)
+```
+
+Gera arquivo JSON de credenciais do Google a partir de variáveis de ambiente.
+
+---
+
+## StringToBool
+
+Arquivo:
+
+```
+StringToBool.py
+```
+
+```python
+string_to_bool(s)
+```
+
+Converte diferentes representações para booleano.
+
+Exemplos aceitos:
+
+```
+true
+false
+1
+0
+s
+n
+```
+
+---
+
+## TempoToBrasilia
+
+Arquivo:
+
+```
+TempoToBrasilia.py
+```
+
+```python
+tempo_to_brasilia(dt)
+```
+
+Converte datas para o fuso horário de **Brasília (UTC-3)**.
+
+---
+
+## ValidarGsutilLink
+
+Arquivo:
+
+```
+ValidarGsutilLink.py
+```
+
+```python
+validar_gsutil_link(link, quant_parts=4, tipos_verificar=None)
+```
+
+Valida links no formato:
+
+```
+gs://bucket/path/file
+```
+
+---
+
+## VerificaTipo
+
+Arquivo:
+
+```
+VerificaTipo.py
+```
+
+Decorator que valida automaticamente tipos de parâmetros.
+
+```python
+@deco_verifica_tipo
+```
+
+Também inclui função auxiliar:
+
+```python
+verifica_tipo(params)
+```
+
+---
+
+## VolumeReader
+
+Arquivo:
+
+```
+VolumeReader.py
+```
+
+```python
+volume_read(nome_arquivo, on_server, mounted_volume_name)
+```
+
+Lê arquivos de um volume montado.
+
+Retorno:
+
+- `.json` → `dict` ou `list`
+- texto → `str`
+- binário → `bytes`
+
+Caminho utilizado:
+
+- Servidor → `/mounted_volume_name/`
+- Local → `./data/mounted_volume_name/`
+
+---
+
+## VolumeWriter
+
+Arquivo:
+
+```
+VolumeWriter.py
+```
+
+```python
+volume_write(nome_arquivo, content, on_server, mounted_volume_name, mounted_volume_read_only)
+```
+
+Escreve conteúdo em um volume montado.
+
+Comportamento:
+
+- `dict` ou `list` com extensão `.json` → salvo como JSON formatado
+- outros tipos → salvos como `str` ou `bytes`
+
+A função cria automaticamente os diretórios necessários e, quando executada no servidor, verifica se o volume está configurado como somente leitura antes de gravar.
+
+# Testes
+
+Os testes unitários estão no diretório:
+
+```
+tests/
+```
+
+Para executar os testes:
+
+```bash
+pytest tests/
+```
+
+---
+
+
+# Licença
+
+Projeto de uso interno da **GlobalTIRH**.
