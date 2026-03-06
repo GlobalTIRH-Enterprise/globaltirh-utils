@@ -4,7 +4,8 @@ from google.genai import types, Client
 from utils_global.GuessMimeType import guess_mimetype
 from utils_global.CreateLogger import log
 
-
+  
+  
 def call_gemini_non_streaming(
     prompt: str,
     project: str,
