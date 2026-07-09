@@ -4,7 +4,7 @@ import os
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../../..")))
 
-from utils_global.validation.VerificaTipo import deco_verifica_tipo
+from utils.validation.VerificaTipo import deco_verifica_tipo
 
 class TestVerificaTipo(unittest.TestCase):
 

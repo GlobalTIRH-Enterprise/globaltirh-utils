@@ -32,17 +32,17 @@ Após a instalação, os módulos ficam disponíveis para importação nos proje
 
 A biblioteca é organizada em dois módulos principais, estruturados de acordo com o propósito de suas funções:
 
-- **functions_global** → funções relacionadas a integrações de maior porte com serviços cloud  
-- **utils_global** → utilidades granulares categorizadas por domínio de uso
+- **functions** → funções relacionadas a integrações de maior porte com serviços cloud  
+- **utils** → utilidades granulares categorizadas por domínio de uso
 
 ```
-functions_global/
+functions/
 ├── cloud/
 │   ├── big_query/      # Integração com Google BigQuery
 │   ├── gemini/         # Integração com modelos Gemini (Vertex AI)
 │   └── storage/        # Operações com Google Cloud Storage
 
-utils_global/
+utils/
 ├── config/             # Configurações de logging e leitura de variáveis de ambiente
 ├── datetime/           # Conversões de data e hora para fuso horário de Brasília
 ├── gcp/                # Integrações utilitárias com serviços GCP
@@ -64,7 +64,7 @@ utils_global/
 Módulo:
 
 ```
-functions_global.cloud.big_query
+functions.cloud.big_query
 ```
 
 Fornece funções utilitárias para gerenciamento de datasets, tabelas e execução de consultas no **Google BigQuery**.
@@ -159,7 +159,7 @@ Retorno pode ser:
 Módulo:
 
 ```
-functions_global.cloud.storage
+functions.cloud.storage
 ```
 
 Fornece funções para manipulação de arquivos no **Google Cloud Storage (GCS)**.
@@ -271,7 +271,7 @@ Retorno:
 Módulo:
 
 ```
-functions_global.cloud.gemini
+functions.cloud.gemini
 ```
 
 Integração com modelos **Gemini da Vertex AI**, com suporte a prompts, anexos e streaming de resposta.
@@ -323,28 +323,28 @@ Executa chamada com **streaming de resposta**.
 Módulo principal:
 
 ```
-utils_global
+utils
 ```
 
-Este pacote é estruturado de forma modular através de subpacotes dedicados a propósitos específicos. Todos os símbolos também continuam convenientemente importados e expostos no nível raiz do pacote (ex: `from utils_global import log` ou `from utils_global import tempo_to_brasilia`), além de estarem disponíveis para importação direta através de seus respectivos subpacotes.
+Este pacote é estruturado de forma modular através de subpacotes dedicados a propósitos específicos. Todos os símbolos também continuam convenientemente importados e expostos no nível raiz do pacote (ex: `from utils import log` ou `from utils import tempo_to_brasilia`), além de estarem disponíveis para importação direta através de seus respectivos subpacotes.
 
 ---
 
 ## 4.1 Configuração e Logs (config)
 
-Subpacote: `utils_global.config`
+Subpacote: `utils.config`
 
 ### CreateLogger
-* **Módulo:** `utils_global.config.CreateLogger`
-* **Import:** `from utils_global.config.CreateLogger import log, FormatadorColorido` (ou `from utils_global import log`)
+* **Módulo:** `utils.config.CreateLogger`
+* **Import:** `from utils.config.CreateLogger import log, FormatadorColorido` (ou `from utils import log`)
 
 Fornece um logger configurado com cores ANSI para terminais.
 
 ---
 
 ### IniciarVariaveisAmbiente
-* **Módulo:** `utils_global.config.IniciarVariaveisAmbiente`
-* **Import:** `from utils_global.config.IniciarVariaveisAmbiente import inicializar_variaveis_de_ambiente` (ou `from utils_global import inicializar_variaveis_de_ambiente`)
+* **Módulo:** `utils.config.IniciarVariaveisAmbiente`
+* **Import:** `from utils.config.IniciarVariaveisAmbiente import inicializar_variaveis_de_ambiente` (ou `from utils import inicializar_variaveis_de_ambiente`)
 
 ```python
 inicializar_variaveis_de_ambiente(possible_locations=None, verbose=0)
@@ -356,11 +356,11 @@ Carrega automaticamente arquivos `.env` a partir de diretórios pré-configurado
 
 ## 4.2 Data e Hora (datetime)
 
-Subpacote: `utils_global.datetime`
+Subpacote: `utils.datetime`
 
 ### TempoToBrasilia
-* **Módulo:** `utils_global.datetime.TempoToBrasilia`
-* **Import:** `from utils_global.datetime.TempoToBrasilia import tempo_to_brasilia` (ou `from utils_global import tempo_to_brasilia`)
+* **Módulo:** `utils.datetime.TempoToBrasilia`
+* **Import:** `from utils.datetime.TempoToBrasilia import tempo_to_brasilia` (ou `from utils import tempo_to_brasilia`)
 
 ```python
 tempo_to_brasilia(dt)
@@ -372,11 +372,11 @@ Converte datas para o fuso horário de **Brasília (UTC-3)** com tratamento corr
 
 ## 4.3 Utilitários GCP (gcp)
 
-Subpacote: `utils_global.gcp`
+Subpacote: `utils.gcp`
 
 ### SalvarCredenciais
-* **Módulo:** `utils_global.gcp.auth.SalvarCredenciais`
-* **Import:** `from utils_global.gcp.auth.SalvarCredenciais import salvar_credenciais` (ou `from utils_global import salvar_credenciais`)
+* **Módulo:** `utils.gcp.auth.SalvarCredenciais`
+* **Import:** `from utils.gcp.auth.SalvarCredenciais import salvar_credenciais` (ou `from utils import salvar_credenciais`)
 
 ```python
 salvar_credenciais(on_server, usar_google_application_credentials, temporary_folder, temporary_file, salvar_dividido=False)
@@ -387,8 +387,8 @@ Gera arquivos JSON temporários contendo credenciais de conta de serviço do GCP
 ---
 
 ### GenerateAccessToken
-* **Módulo:** `utils_global.gcp.auth.GenerateAccessToken`
-* **Import:** `from utils_global.gcp.auth.GenerateAccessToken import generate_access_token` (ou `from utils_global import generate_access_token`)
+* **Módulo:** `utils.gcp.auth.GenerateAccessToken`
+* **Import:** `from utils.gcp.auth.GenerateAccessToken import generate_access_token` (ou `from utils import generate_access_token`)
 
 ```python
 generate_access_token(client_email, private_key_id, private_key, scope, expires_in=3600)
@@ -399,8 +399,8 @@ Gera tokens de acesso OAuth2 usando assinatura manual de JWTs com a chave privad
 ---
 
 ### CheckContentIsValid
-* **Módulo:** `utils_global.gcp.gemini.CheckContentIsValid`
-* **Import:** `from utils_global.gcp.gemini.CheckContentIsValid import check_content_is_valid` (ou `from utils_global import check_content_is_valid`)
+* **Módulo:** `utils.gcp.gemini.CheckContentIsValid`
+* **Import:** `from utils.gcp.gemini.CheckContentIsValid import check_content_is_valid` (ou `from utils import check_content_is_valid`)
 
 ```python
 check_content_is_valid(content: list)
@@ -411,8 +411,8 @@ Valida o formato e estrutura de listas de conteúdo para envio à API do Gemini 
 ---
 
 ### ValidarGsutilLink
-* **Módulo:** `utils_global.gcp.storage.ValidarGsutilLink`
-* **Import:** `from utils_global.gcp.storage.ValidarGsutilLink import validar_gsutil_link` (ou `from utils_global import validar_gsutil_link`)
+* **Módulo:** `utils.gcp.storage.ValidarGsutilLink`
+* **Import:** `from utils.gcp.storage.ValidarGsutilLink import validar_gsutil_link` (ou `from utils import validar_gsutil_link`)
 
 ```python
 validar_gsutil_link(link, quant_parts=4, tipos_verificar=None)
@@ -424,11 +424,11 @@ Valida a formatação de URIs do Google Cloud Storage (`gs://...`).
 
 ## 4.4 Entrada/Saída e Arquivos (io)
 
-Subpacote: `utils_global.io`
+Subpacote: `utils.io`
 
 ### GuessMimeType
-* **Módulo:** `utils_global.io.GuessMimeType`
-* **Import:** `from utils_global.io.GuessMimeType import guess_mimetype` (ou `from utils_global import guess_mimetype`)
+* **Módulo:** `utils.io.GuessMimeType`
+* **Import:** `from utils.io.GuessMimeType import guess_mimetype` (ou `from utils import guess_mimetype`)
 
 ```python
 guess_mimetype(path: str)
@@ -439,8 +439,8 @@ Detecta automaticamente o tipo MIME correto de arquivos (com fallbacks para form
 ---
 
 ### VolumeReader
-* **Módulo:** `utils_global.io.VolumeReader`
-* **Import:** `from utils_global.io.VolumeReader import volume_read` (ou `from utils_global import volume_read`)
+* **Módulo:** `utils.io.VolumeReader`
+* **Import:** `from utils.io.VolumeReader import volume_read` (ou `from utils import volume_read`)
 
 ```python
 volume_read(nome_arquivo, on_server, mounted_volume_name)
@@ -451,8 +451,8 @@ Lê arquivos de um volume de disco compartilhado montado no servidor ou de uma e
 ---
 
 ### VolumeWriter
-* **Módulo:** `utils_global.io.VolumeWriter`
-* **Import:** `from utils_global.io.VolumeWriter import volume_write` (ou `from utils_global import volume_write`)
+* **Módulo:** `utils.io.VolumeWriter`
+* **Import:** `from utils.io.VolumeWriter import volume_write` (ou `from utils import volume_write`)
 
 ```python
 volume_write(nome_arquivo, content, on_server, mounted_volume_name, mounted_volume_read_only)
@@ -464,11 +464,11 @@ Grava com segurança diferentes formatos (JSON, strings, bytes) em volumes de di
 
 ## 4.5 Processamento de Texto (text)
 
-Subpacote: `utils_global.text`
+Subpacote: `utils.text`
 
 ### FormatarTextoIdentificador
-* **Módulo:** `utils_global.text.FormatarTextoIdentificador`
-* **Import:** `from utils_global.text.FormatarTextoIdentificador import formatar_texto_para_identificador` (ou `from utils_global import formatar_texto_para_identificador`)
+* **Módulo:** `utils.text.FormatarTextoIdentificador`
+* **Import:** `from utils.text.FormatarTextoIdentificador import formatar_texto_para_identificador` (ou `from utils import formatar_texto_para_identificador`)
 
 ```python
 formatar_texto_para_identificador(text: str) -> str
@@ -479,8 +479,8 @@ Normaliza strings (remoção de pontuações, conversão de acentuações para A
 ---
 
 ### GetDictFromText
-* **Módulo:** `utils_global.text.GetDictFromText`
-* **Import:** `from utils_global.text.GetDictFromText import get_dict_from_text` (ou `from utils_global import get_dict_from_text`)
+* **Módulo:** `utils.text.GetDictFromText`
+* **Import:** `from utils.text.GetDictFromText import get_dict_from_text` (ou `from utils import get_dict_from_text`)
 
 ```python
 get_dict_from_text(text: str) -> dict
@@ -491,8 +491,8 @@ Identifica, extrai e converte blocos JSON embutidos em textos retornados por mod
 ---
 
 ### ProcessaUneStrings
-* **Módulo:** `utils_global.text.ProcessaUneStrings`
-* **Import:** `from utils_global.text.ProcessaUneStrings import processa_une_strings` (ou `from utils_global import processa_une_strings`)
+* **Módulo:** `utils.text.ProcessaUneStrings`
+* **Import:** `from utils.text.ProcessaUneStrings import processa_une_strings` (ou `from utils import processa_une_strings`)
 
 ```python
 processa_une_strings(string_list)
@@ -503,8 +503,8 @@ Deduz e elimina duplicatas de texto de forma estrita ou normalizada, unindo os p
 ---
 
 ### StringToBool
-* **Módulo:** `utils_global.text.StringToBool`
-* **Import:** `from utils_global.text.StringToBool import string_to_bool` (ou `from utils_global import string_to_bool`)
+* **Módulo:** `utils.text.StringToBool`
+* **Import:** `from utils.text.StringToBool import string_to_bool` (ou `from utils import string_to_bool`)
 
 ```python
 string_to_bool(s)
@@ -516,11 +516,11 @@ Converte strings e representações variadas em valores booleanos do Python.
 
 ## 4.6 Validação de Dados (validation)
 
-Subpacote: `utils_global.validation`
+Subpacote: `utils.validation`
 
 ### VerificaTipo
-* **Módulo:** `utils_global.validation.VerificaTipo`
-* **Import:** `from utils_global.validation.VerificaTipo import verifica_tipo, deco_verifica_tipo` (ou `from utils_global import verifica_tipo, deco_verifica_tipo`)
+* **Módulo:** `utils.validation.VerificaTipo`
+* **Import:** `from utils.validation.VerificaTipo import verifica_tipo, deco_verifica_tipo` (ou `from utils import verifica_tipo, deco_verifica_tipo`)
 
 ```python
 @deco_verifica_tipo

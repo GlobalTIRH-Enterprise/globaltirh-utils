@@ -6,12 +6,12 @@ import json
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../..")))
 
-from utils_global.gcp.auth.SalvarCredenciais import salvar_credenciais
+from utils.gcp.auth.SalvarCredenciais import salvar_credenciais
 
 
 class TestSalvarCredenciais(unittest.TestCase):
 
-    @patch("utils_global.gcp.auth.SalvarCredenciais.log")
+    @patch("utils.gcp.auth.SalvarCredenciais.log")
     def test_deve_pular_setup_on_server(self, mock_log):
         """Teste se a função retorna cedo quando on_server é True."""
         salvar_credenciais(
@@ -23,7 +23,7 @@ class TestSalvarCredenciais(unittest.TestCase):
         mock_log.info.assert_called()
         self.assertIn("ON_SERVER=TRUE", mock_log.info.call_args[0][0])
 
-    @patch("utils_global.gcp.auth.SalvarCredenciais.log")
+    @patch("utils.gcp.auth.SalvarCredenciais.log")
     def test_deve_pular_setup_flag_false(self, mock_log):
         """Teste se a função retorna cedo quando usar_google_application_credentials é False."""
         salvar_credenciais(
@@ -37,7 +37,7 @@ class TestSalvarCredenciais(unittest.TestCase):
             "USAR GOOGLE APPLICATION CREDENTIALS = FALSE", mock_log.info.call_args[0][0]
         )
 
-    @patch("utils_global.gcp.auth.SalvarCredenciais.log")
+    @patch("utils.gcp.auth.SalvarCredenciais.log")
     def test_deve_pular_setup_ja_definido(self, mock_log):
         """Teste se a função retorna cedo quando GOOGLE_APPLICATION_CREDENTIALS já existe."""
         with patch.dict(os.environ, {"GOOGLE_APPLICATION_CREDENTIALS": "/path/exists"}):
@@ -50,7 +50,7 @@ class TestSalvarCredenciais(unittest.TestCase):
             mock_log.info.assert_called()
             self.assertIn("já definida", mock_log.info.call_args[0][0])
 
-    @patch("utils_global.gcp.auth.SalvarCredenciais.Path")
+    @patch("utils.gcp.auth.SalvarCredenciais.Path")
     @patch("builtins.open", new_callable=mock_open)
     def test_salvar_credenciais_full_json(self, mock_file, mock_path):
         """Teste salvando credenciais a partir de FULL_GCP_CREDENTIAL."""
@@ -77,7 +77,7 @@ class TestSalvarCredenciais(unittest.TestCase):
                 os.environ.get("GOOGLE_APPLICATION_CREDENTIALS"), "/tmp/creds.json"
             )
 
-    @patch("utils_global.gcp.auth.SalvarCredenciais.Path")
+    @patch("utils.gcp.auth.SalvarCredenciais.Path")
     @patch("builtins.open", new_callable=mock_open)
     def test_salvar_credenciais_individuais(self, mock_file, mock_path):
         """Teste salvando credenciais a partir de variáveis individuais."""

@@ -1,8 +1,8 @@
 import unittest
 from unittest.mock import MagicMock, patch, mock_open
 
-from functions_global.cloud.Gemini import (
-    call_gemini_non_streaming,
+from functions.cloud.gemini import (
+    call_gemini,
     call_gemini_streaming,
 )
 
@@ -10,17 +10,17 @@ from functions_global.cloud.Gemini import (
 class TestGeminiNonStreaming(unittest.TestCase):
     """Testes para a função síncrona (sem streaming)."""
 
-    @patch("functions.cloud.Gemini.CallGeminiNonStreaming.Client")
-    @patch("functions.cloud.Gemini.CallGeminiNonStreaming.types")
+    @patch("functions.cloud.gemini.CallGemini.Client")
+    @patch("functions.cloud.gemini.CallGemini.types")
     def test_non_streaming_simple_text(self, mock_types, mock_client_cls):
         mock_client = mock_client_cls.return_value
         mock_response = MagicMock()
         mock_response.text = "Resposta Gemini"
         mock_client.models.generate_content.return_value = mock_response
 
-        resp = call_gemini_non_streaming(
+        resp = call_gemini(
             prompt="Olá",
-            project_id="proj",
+            project="proj",
             location="us-central1",
             model_name="gemini-pro"
         )
@@ -28,10 +28,10 @@ class TestGeminiNonStreaming(unittest.TestCase):
         self.assertEqual(resp, "Resposta Gemini")
         mock_client.models.generate_content.assert_called_once()
 
-    @patch("functions.cloud.Gemini.CallGeminiNonStreaming.Client")
-    @patch("functions.cloud.Gemini.CallGeminiNonStreaming.guess_mimetype")
+    @patch("functions.cloud.gemini.CallGemini.Client")
+    @patch("functions.cloud.gemini.CallGemini.guess_mimetype")
     @patch("builtins.open", new_callable=mock_open, read_data=b"dados_arquivo")
-    @patch("functions.cloud.Gemini.CallGeminiNonStreaming.types")
+    @patch("functions.cloud.gemini.CallGemini.types")
     def test_non_streaming_with_local_file(self, mock_types, mock_file, mock_guess_mime, mock_client_cls):
         mock_guess_mime.return_value = "application/pdf"
         mock_client = mock_client_cls.return_value
@@ -39,9 +39,9 @@ class TestGeminiNonStreaming(unittest.TestCase):
         mock_response.text = "Analise PDF"
         mock_client.models.generate_content.return_value = mock_response
 
-        call_gemini_non_streaming(
+        call_gemini(
             prompt="Analise",
-            project_id="proj",
+            project="proj",
             location="loc",
             model_name="model",
             arquivos=["documento.pdf"]
@@ -51,9 +51,9 @@ class TestGeminiNonStreaming(unittest.TestCase):
             data=b"dados_arquivo", mime_type="application/pdf"
         )
 
-    @patch("functions.cloud.Gemini.CallGeminiNonStreaming.Client")
-    @patch("functions.cloud.Gemini.CallGeminiNonStreaming.guess_mimetype")
-    @patch("functions.cloud.Gemini.CallGeminiNonStreaming.types")
+    @patch("functions.cloud.gemini.CallGemini.Client")
+    @patch("functions.cloud.gemini.CallGemini.guess_mimetype")
+    @patch("functions.cloud.gemini.CallGemini.types")
     def test_non_streaming_with_gcs_file(self, mock_types, mock_guess_mime, mock_client_cls):
         mock_guess_mime.return_value = "image/png"
         mock_client = mock_client_cls.return_value
@@ -61,9 +61,9 @@ class TestGeminiNonStreaming(unittest.TestCase):
         mock_response.text = "Resposta"
         mock_client.models.generate_content.return_value = mock_response
 
-        call_gemini_non_streaming(
+        call_gemini(
             prompt="Veja imagem",
-            project_id="proj",
+            project="proj",
             location="loc",
             model_name="model",
             arquivos="gs://bucket/imagem.png"
@@ -77,7 +77,7 @@ class TestGeminiNonStreaming(unittest.TestCase):
 class TestGeminiStreaming(unittest.TestCase):
     """Testes para a função com streaming."""
 
-    @patch("functions.cloud.Gemini.CallGeminiStreaming.Client")
+    @patch("functions.cloud.gemini.CallGeminiStreaming.Client")
     def test_streaming_simple_text(self, mock_client_cls):
         mock_client = mock_client_cls.return_value
         chunk1 = MagicMock()
@@ -88,7 +88,7 @@ class TestGeminiStreaming(unittest.TestCase):
 
         resp = call_gemini_streaming(
             prompt="Stream",
-            project_id="proj",
+            project="proj",
             location="loc",
             model_name="model",
             return_only_text=True
@@ -97,10 +97,10 @@ class TestGeminiStreaming(unittest.TestCase):
         self.assertEqual(resp, "Parte 1Parte 2")
         mock_client.models.generate_content_stream.assert_called_once()
 
-    @patch("functions.cloud.Gemini.CallGeminiStreaming.Client")
-    @patch("functions.cloud.Gemini.CallGeminiStreaming.guess_mimetype")
+    @patch("functions.cloud.gemini.CallGeminiStreaming.Client")
+    @patch("functions.cloud.gemini.CallGeminiStreaming.guess_mimetype")
     @patch("builtins.open", new_callable=mock_open, read_data=b"dados_arquivo")
-    @patch("functions.cloud.Gemini.CallGeminiStreaming.types")
+    @patch("functions.cloud.gemini.CallGeminiStreaming.types")
     def test_streaming_with_local_file(self, mock_types, mock_file, mock_guess_mime, mock_client_cls):
         mock_guess_mime.return_value = "application/pdf"
         mock_client = mock_client_cls.return_value
@@ -108,7 +108,7 @@ class TestGeminiStreaming(unittest.TestCase):
 
         call_gemini_streaming(
             prompt="Analise",
-            project_id="proj",
+            project="proj",
             location="loc",
             model_name="model",
             arquivos=["documento.pdf"]
@@ -118,9 +118,9 @@ class TestGeminiStreaming(unittest.TestCase):
             data=b"dados_arquivo", mime_type="application/pdf"
         )
 
-    @patch("functions.cloud.Gemini.CallGeminiStreaming.Client")
-    @patch("functions.cloud.Gemini.CallGeminiStreaming.guess_mimetype")
-    @patch("functions.cloud.Gemini.CallGeminiStreaming.types")
+    @patch("functions.cloud.gemini.CallGeminiStreaming.Client")
+    @patch("functions.cloud.gemini.CallGeminiStreaming.guess_mimetype")
+    @patch("functions.cloud.gemini.CallGeminiStreaming.types")
     def test_streaming_with_gcs_file(self, mock_types, mock_guess_mime, mock_client_cls):
         mock_guess_mime.return_value = "image/png"
         mock_client = mock_client_cls.return_value
@@ -128,7 +128,7 @@ class TestGeminiStreaming(unittest.TestCase):
 
         call_gemini_streaming(
             prompt="Veja imagem",
-            project_id="proj",
+            project="proj",
             location="loc",
             model_name="model",
             arquivos="gs://bucket/imagem.png"
