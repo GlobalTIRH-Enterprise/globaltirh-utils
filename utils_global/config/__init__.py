@@ -1,0 +1,2 @@
+from .CreateLogger import log
+from .IniciarVariaveisAmbiente import inicializar_variaveis_de_ambiente

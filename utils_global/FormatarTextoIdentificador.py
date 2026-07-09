@@ -1,37 +1,8 @@
-import re
-import unicodedata
-from .VerificaTipo import deco_verifica_tipo
+import warnings
+from utils_global.text.FormatarTextoIdentificador import formatar_texto_para_identificador
 
-
-@deco_verifica_tipo
-def formatar_texto_para_identificador(text: str) -> str:
-    """
-    Formata uma string para ser usada como um identificador seguro,
-    realizando as seguintes operações:
-    - Remove acentos (ex: 'ç' -> 'c', 'á' -> 'a').
-    - Substitui um ou mais espaços em branco por um único underscore.
-    - Remove as seguintes pontuações: ',', ';', '.', '\', '/'.
-    - Garante que não haja múltiplos underscores em sequência.
-
-    Args:
-        text (str): O texto a ser formatado.
-
-    Returns:
-        str: O texto formatado como um identificador.
-    """
-    # Remove acentos
-    text = "".join(
-        c for c in unicodedata.normalize("NFKD", text) if unicodedata.category(c) != "Mn"
-    )
-
-    # Substitui espaços por underscores
-    text = re.sub(r"\s+", "_", text).strip()
-
-    # Garante que não haja underscores duplicados
-    text = re.sub(r"_+", "_", text)
-
-    # Remove pontuações específicas
-    pontuacao_remover = r"[,;.\\/]"
-    text = re.sub(pontuacao_remover, "", text)
-
-    return text.lower()
+warnings.warn(
+    "utils_global.FormatarTextoIdentificador is deprecated. Use utils_global.text.FormatarTextoIdentificador or import directly from utils_global.",
+    DeprecationWarning,
+    stacklevel=2
+)

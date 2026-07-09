@@ -3,9 +3,9 @@ import sys
 import os
 
 # Adiciona o diretório raiz ao path para importar o pacote globaltirh_utils
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../..")))
 
-from utils_global.ValidarGsutilLink import validar_gsutil_link
+from utils_global.gcp.storage.ValidarGsutilLink import validar_gsutil_link
 
 class TestValidarGsutilLink(unittest.TestCase):
 

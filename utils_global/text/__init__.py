@@ -1,0 +1,4 @@
+from .FormatarTextoIdentificador import formatar_texto_para_identificador
+from .GetDictFromText import get_dict_from_text
+from .ProcessaUneStrings import processa_une_strings
+from .StringToBool import string_to_bool

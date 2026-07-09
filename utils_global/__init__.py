@@ -1,15 +1,6 @@
-from .CheckContentIsValid import check_content_is_valid
-from .CreateLogger import log
-from .FormatarTextoIdentificador import formatar_texto_para_identificador
-from .GenerateAccessToken import generate_access_token
-from .GetDictFromText import get_dict_from_text
-from .GuessMimeType import guess_mimetype
-from .IniciarVariaveisAmbiente import inicializar_variaveis_de_ambiente
-from .ProcessaUneStrings import processa_une_strings
-from .StringToBool import string_to_bool
-from .TempoToBrasilia import tempo_to_brasilia
-from .ValidarGsutilLink import validar_gsutil_link
-from .VerificaTipo import verifica_tipo, deco_verifica_tipo
-from .SalvarCredenciais import salvar_credenciais
-from .VolumeReader import volume_read
-from .VolumeWriter import volume_write
+from .config import log, inicializar_variaveis_de_ambiente
+from .datetime import tempo_to_brasilia
+from .gcp import generate_access_token, salvar_credenciais, check_content_is_valid, validar_gsutil_link
+from .io import guess_mimetype, volume_read, volume_write
+from .text import formatar_texto_para_identificador, get_dict_from_text, processa_une_strings, string_to_bool
+from .validation import verifica_tipo, deco_verifica_tipo

@@ -3,9 +3,9 @@ import sys
 import os
 
 # Adiciona o diretório raiz ao path para importar o pacote globaltirh_utils
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../../..")))
 
-from utils_global.FormatarTextoIdentificador import formatar_texto_para_identificador
+from utils_global.text.FormatarTextoIdentificador import formatar_texto_para_identificador
 
 
 class TestFormatarTextoIdentificador(unittest.TestCase):
