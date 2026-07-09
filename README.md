@@ -1,4 +1,4 @@
-# globaltirh-utils
+# globaltirh-helpers
 
 Repositório de utilidades para projetos da **GlobalTIRH**.
 
@@ -6,7 +6,7 @@ Este pacote fornece um conjunto de funções utilitárias para integração com 
 
 O objetivo da biblioteca é **padronizar operações comuns utilizadas nos projetos da organização**, facilitando reutilização de código e reduzindo duplicação de lógica.
 
-O import do pacote globaltirh-utils está presente somente nos seguintes repositórios:
+O import do pacote globaltirh-helpers está presente somente nos seguintes repositórios:
 
 Compara-es-Gemini
 
@@ -21,7 +21,7 @@ ses-go-portal-transparencia
 O pacote pode ser instalado diretamente do repositório GitHub utilizando `pip`.
 
 ```bash
-pip install git+https://github.com/GlobalTIRH-Enterprise/globaltirh-utils.git@deploy
+pip install git+https://github.com/GlobalTIRH-Enterprise/globaltirh-helpers.git@deploy
 ```
 
 Após a instalação, os módulos ficam disponíveis para importação nos projetos Python.
@@ -32,17 +32,17 @@ Após a instalação, os módulos ficam disponíveis para importação nos proje
 
 A biblioteca é organizada em dois módulos principais, estruturados de acordo com o propósito de suas funções:
 
-- **functions** → funções relacionadas a integrações de maior porte com serviços cloud  
-- **utils** → utilidades granulares categorizadas por domínio de uso
+- **services** → funções relacionadas a integrações de maior porte com serviços cloud  
+- **helpers** → utilidades granulares categorizadas por domínio de uso
 
 ```
-functions/
+services/
 ├── cloud/
 │   ├── big_query/      # Integração com Google BigQuery
 │   ├── gemini/         # Integração com modelos Gemini (Vertex AI)
 │   └── storage/        # Operações com Google Cloud Storage
 
-utils/
+helpers/
 ├── config/             # Configurações de logging e leitura de variáveis de ambiente
 ├── datetime/           # Conversões de data e hora para fuso horário de Brasília
 ├── gcp/                # Integrações utilitárias com serviços GCP
@@ -64,7 +64,7 @@ utils/
 Módulo:
 
 ```
-functions.cloud.big_query
+services.cloud.big_query
 ```
 
 Fornece funções utilitárias para gerenciamento de datasets, tabelas e execução de consultas no **Google BigQuery**.
@@ -159,7 +159,7 @@ Retorno pode ser:
 Módulo:
 
 ```
-functions.cloud.storage
+services.cloud.storage
 ```
 
 Fornece funções para manipulação de arquivos no **Google Cloud Storage (GCS)**.
@@ -271,7 +271,7 @@ Retorno:
 Módulo:
 
 ```
-functions.cloud.gemini
+services.cloud.gemini
 ```
 
 Integração com modelos **Gemini da Vertex AI**, com suporte a prompts, anexos e streaming de resposta.
@@ -323,28 +323,28 @@ Executa chamada com **streaming de resposta**.
 Módulo principal:
 
 ```
-utils
+helpers
 ```
 
-Este pacote é estruturado de forma modular através de subpacotes dedicados a propósitos específicos. Todos os símbolos também continuam convenientemente importados e expostos no nível raiz do pacote (ex: `from utils import log` ou `from utils import tempo_to_brasilia`), além de estarem disponíveis para importação direta através de seus respectivos subpacotes.
+Este pacote é estruturado de forma modular através de subpacotes dedicados a propósitos específicos. Todos os símbolos também continuam convenientemente importados e expostos no nível raiz do pacote (ex: `from helpers import log` ou `from helpers import tempo_to_brasilia`), além de estarem disponíveis para importação direta através de seus respectivos subpacotes.
 
 ---
 
 ## 4.1 Configuração e Logs (config)
 
-Subpacote: `utils.config`
+Subpacote: `helpers.config`
 
 ### CreateLogger
-* **Módulo:** `utils.config.CreateLogger`
-* **Import:** `from utils.config.CreateLogger import log, FormatadorColorido` (ou `from utils import log`)
+* **Módulo:** `helpers.config.CreateLogger`
+* **Import:** `from helpers.config.CreateLogger import log, FormatadorColorido` (ou `from helpers import log`)
 
 Fornece um logger configurado com cores ANSI para terminais.
 
 ---
 
 ### IniciarVariaveisAmbiente
-* **Módulo:** `utils.config.IniciarVariaveisAmbiente`
-* **Import:** `from utils.config.IniciarVariaveisAmbiente import inicializar_variaveis_de_ambiente` (ou `from utils import inicializar_variaveis_de_ambiente`)
+* **Módulo:** `helpers.config.IniciarVariaveisAmbiente`
+* **Import:** `from helpers.config.IniciarVariaveisAmbiente import inicializar_variaveis_de_ambiente` (ou `from helpers import inicializar_variaveis_de_ambiente`)
 
 ```python
 inicializar_variaveis_de_ambiente(possible_locations=None, verbose=0)
@@ -356,11 +356,11 @@ Carrega automaticamente arquivos `.env` a partir de diretórios pré-configurado
 
 ## 4.2 Data e Hora (datetime)
 
-Subpacote: `utils.datetime`
+Subpacote: `helpers.datetime`
 
 ### TempoToBrasilia
-* **Módulo:** `utils.datetime.TempoToBrasilia`
-* **Import:** `from utils.datetime.TempoToBrasilia import tempo_to_brasilia` (ou `from utils import tempo_to_brasilia`)
+* **Módulo:** `helpers.datetime.TempoToBrasilia`
+* **Import:** `from helpers.datetime.TempoToBrasilia import tempo_to_brasilia` (ou `from helpers import tempo_to_brasilia`)
 
 ```python
 tempo_to_brasilia(dt)
@@ -372,11 +372,11 @@ Converte datas para o fuso horário de **Brasília (UTC-3)** com tratamento corr
 
 ## 4.3 Utilitários GCP (gcp)
 
-Subpacote: `utils.gcp`
+Subpacote: `helpers.gcp`
 
 ### SalvarCredenciais
-* **Módulo:** `utils.gcp.auth.SalvarCredenciais`
-* **Import:** `from utils.gcp.auth.SalvarCredenciais import salvar_credenciais` (ou `from utils import salvar_credenciais`)
+* **Módulo:** `helpers.gcp.auth.SalvarCredenciais`
+* **Import:** `from helpers.gcp.auth.SalvarCredenciais import salvar_credenciais` (ou `from helpers import salvar_credenciais`)
 
 ```python
 salvar_credenciais(on_server, usar_google_application_credentials, temporary_folder, temporary_file, salvar_dividido=False)
@@ -387,8 +387,8 @@ Gera arquivos JSON temporários contendo credenciais de conta de serviço do GCP
 ---
 
 ### GenerateAccessToken
-* **Módulo:** `utils.gcp.auth.GenerateAccessToken`
-* **Import:** `from utils.gcp.auth.GenerateAccessToken import generate_access_token` (ou `from utils import generate_access_token`)
+* **Módulo:** `helpers.gcp.auth.GenerateAccessToken`
+* **Import:** `from helpers.gcp.auth.GenerateAccessToken import generate_access_token` (ou `from helpers import generate_access_token`)
 
 ```python
 generate_access_token(client_email, private_key_id, private_key, scope, expires_in=3600)
@@ -399,8 +399,8 @@ Gera tokens de acesso OAuth2 usando assinatura manual de JWTs com a chave privad
 ---
 
 ### CheckContentIsValid
-* **Módulo:** `utils.gcp.gemini.CheckContentIsValid`
-* **Import:** `from utils.gcp.gemini.CheckContentIsValid import check_content_is_valid` (ou `from utils import check_content_is_valid`)
+* **Módulo:** `helpers.gcp.gemini.CheckContentIsValid`
+* **Import:** `from helpers.gcp.gemini.CheckContentIsValid import check_content_is_valid` (ou `from helpers import check_content_is_valid`)
 
 ```python
 check_content_is_valid(content: list)
@@ -411,8 +411,8 @@ Valida o formato e estrutura de listas de conteúdo para envio à API do Gemini 
 ---
 
 ### ValidarGsutilLink
-* **Módulo:** `utils.gcp.storage.ValidarGsutilLink`
-* **Import:** `from utils.gcp.storage.ValidarGsutilLink import validar_gsutil_link` (ou `from utils import validar_gsutil_link`)
+* **Módulo:** `helpers.gcp.storage.ValidarGsutilLink`
+* **Import:** `from helpers.gcp.storage.ValidarGsutilLink import validar_gsutil_link` (ou `from helpers import validar_gsutil_link`)
 
 ```python
 validar_gsutil_link(link, quant_parts=4, tipos_verificar=None)
@@ -424,11 +424,11 @@ Valida a formatação de URIs do Google Cloud Storage (`gs://...`).
 
 ## 4.4 Entrada/Saída e Arquivos (io)
 
-Subpacote: `utils.io`
+Subpacote: `helpers.io`
 
 ### GuessMimeType
-* **Módulo:** `utils.io.GuessMimeType`
-* **Import:** `from utils.io.GuessMimeType import guess_mimetype` (ou `from utils import guess_mimetype`)
+* **Módulo:** `helpers.io.GuessMimeType`
+* **Import:** `from helpers.io.GuessMimeType import guess_mimetype` (ou `from helpers import guess_mimetype`)
 
 ```python
 guess_mimetype(path: str)
@@ -439,8 +439,8 @@ Detecta automaticamente o tipo MIME correto de arquivos (com fallbacks para form
 ---
 
 ### VolumeReader
-* **Módulo:** `utils.io.VolumeReader`
-* **Import:** `from utils.io.VolumeReader import volume_read` (ou `from utils import volume_read`)
+* **Módulo:** `helpers.io.VolumeReader`
+* **Import:** `from helpers.io.VolumeReader import volume_read` (ou `from helpers import volume_read`)
 
 ```python
 volume_read(nome_arquivo, on_server, mounted_volume_name)
@@ -451,8 +451,8 @@ Lê arquivos de um volume de disco compartilhado montado no servidor ou de uma e
 ---
 
 ### VolumeWriter
-* **Módulo:** `utils.io.VolumeWriter`
-* **Import:** `from utils.io.VolumeWriter import volume_write` (ou `from utils import volume_write`)
+* **Módulo:** `helpers.io.VolumeWriter`
+* **Import:** `from helpers.io.VolumeWriter import volume_write` (ou `from helpers import volume_write`)
 
 ```python
 volume_write(nome_arquivo, content, on_server, mounted_volume_name, mounted_volume_read_only)
@@ -464,11 +464,11 @@ Grava com segurança diferentes formatos (JSON, strings, bytes) em volumes de di
 
 ## 4.5 Processamento de Texto (text)
 
-Subpacote: `utils.text`
+Subpacote: `helpers.text`
 
 ### FormatarTextoIdentificador
-* **Módulo:** `utils.text.FormatarTextoIdentificador`
-* **Import:** `from utils.text.FormatarTextoIdentificador import formatar_texto_para_identificador` (ou `from utils import formatar_texto_para_identificador`)
+* **Módulo:** `helpers.text.FormatarTextoIdentificador`
+* **Import:** `from helpers.text.FormatarTextoIdentificador import formatar_texto_para_identificador` (ou `from helpers import formatar_texto_para_identificador`)
 
 ```python
 formatar_texto_para_identificador(text: str) -> str
@@ -479,8 +479,8 @@ Normaliza strings (remoção de pontuações, conversão de acentuações para A
 ---
 
 ### GetDictFromText
-* **Módulo:** `utils.text.GetDictFromText`
-* **Import:** `from utils.text.GetDictFromText import get_dict_from_text` (ou `from utils import get_dict_from_text`)
+* **Módulo:** `helpers.text.GetDictFromText`
+* **Import:** `from helpers.text.GetDictFromText import get_dict_from_text` (ou `from helpers import get_dict_from_text`)
 
 ```python
 get_dict_from_text(text: str) -> dict
@@ -491,8 +491,8 @@ Identifica, extrai e converte blocos JSON embutidos em textos retornados por mod
 ---
 
 ### ProcessaUneStrings
-* **Módulo:** `utils.text.ProcessaUneStrings`
-* **Import:** `from utils.text.ProcessaUneStrings import processa_une_strings` (ou `from utils import processa_une_strings`)
+* **Módulo:** `helpers.text.ProcessaUneStrings`
+* **Import:** `from helpers.text.ProcessaUneStrings import processa_une_strings` (ou `from helpers import processa_une_strings`)
 
 ```python
 processa_une_strings(string_list)
@@ -503,8 +503,8 @@ Deduz e elimina duplicatas de texto de forma estrita ou normalizada, unindo os p
 ---
 
 ### StringToBool
-* **Módulo:** `utils.text.StringToBool`
-* **Import:** `from utils.text.StringToBool import string_to_bool` (ou `from utils import string_to_bool`)
+* **Módulo:** `helpers.text.StringToBool`
+* **Import:** `from helpers.text.StringToBool import string_to_bool` (ou `from helpers import string_to_bool`)
 
 ```python
 string_to_bool(s)
@@ -516,11 +516,11 @@ Converte strings e representações variadas em valores booleanos do Python.
 
 ## 4.6 Validação de Dados (validation)
 
-Subpacote: `utils.validation`
+Subpacote: `helpers.validation`
 
 ### VerificaTipo
-* **Módulo:** `utils.validation.VerificaTipo`
-* **Import:** `from utils.validation.VerificaTipo import verifica_tipo, deco_verifica_tipo` (ou `from utils import verifica_tipo, deco_verifica_tipo`)
+* **Módulo:** `helpers.validation.VerificaTipo`
+* **Import:** `from helpers.validation.VerificaTipo import verifica_tipo, deco_verifica_tipo` (ou `from helpers import verifica_tipo, deco_verifica_tipo`)
 
 ```python
 @deco_verifica_tipo
