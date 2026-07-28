@@ -112,4 +112,45 @@ def create_logger() -> logging.Logger:
 
     return logger
 
+
+def recreate_logger() -> logging.Logger:
+    """
+    Recria e reconfigura o logger global, forçando a re-leitura das variáveis de ambiente.
+
+    Remove os handlers anteriores do logger antigo (se houver) para evitar duplicação ou vazamento,
+    configura o novo logger de acordo com as novas variáveis do ambiente e atualiza a referência
+    global `log` no módulo.
+
+    Returns:
+        logging.Logger: Instância do logger configurado e atualizado.
+    """
+    global log
+
+    # Limpa handlers do logger antigo antes de mudar a referência
+    if "log" in globals() and log:
+        for handler in list(log.handlers):
+            log.removeHandler(handler)
+
+    nome_logger, nivel_log_str = _get_env_logger_data()
+    logger = logging.getLogger(nome_logger)
+
+    # Limpa handlers pré-existentes no novo logger (se houver) para evitar duplicados
+    for handler in list(logger.handlers):
+        logger.removeHandler(handler)
+
+    nivel_log = getattr(logging, nivel_log_str, logging.INFO)
+    logger.setLevel(nivel_log)
+
+    # Configuração do handler de console
+    manipulador = logging.StreamHandler()
+    manipulador.setFormatter(FormatadorColorido())
+    logger.addHandler(manipulador)
+
+    # Impede que o log propague para o logger root (evita duplicidade se o root tiver config)
+    logger.propagate = False
+
+    log = logger
+    return logger
+
+
 log = create_logger()

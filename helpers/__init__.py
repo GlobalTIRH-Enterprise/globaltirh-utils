@@ -1,4 +1,4 @@
-from .config import log, inicializar_variaveis_de_ambiente
+from .config import log, inicializar_variaveis_de_ambiente, recreate_logger
 from .datetime import tempo_to_brasilia
 from .gcp import generate_access_token, salvar_credenciais, check_content_is_valid, validar_gsutil_link
 from .io import guess_mimetype, volume_read, volume_write
