@@ -354,6 +354,30 @@ Carrega automaticamente arquivos `.env` a partir de diretórios pré-configurado
 
 ---
 
+### Fluxo de Inicialização (Lazy-Loading)
+
+> [!IMPORTANT]
+> O pacote utiliza **lazy-loading (carregamento sob demanda)** para todos os seus componentes. Isso foi projetado especificamente para que a função `inicializar_variaveis_de_ambiente` possa ser importada e executada sem carregar ou instanciar o logger `log` precocemente na memória.
+
+Como o `log` consome variáveis de ambiente (como `LOGGER_NAME` e `LOGGING_LEVEL`) no momento em que é carregado, é altamente recomendado seguir a ordem de execução abaixo para que o logger reflita corretamente os valores configurados no seu `.env`:
+
+```python
+# 1. Importa apenas o inicializador de variáveis. O logger permanece intocado.
+from helpers import inicializar_variaveis_de_ambiente
+
+# 2. Carrega as configurações do arquivo .env para as variáveis de ambiente
+inicializar_variaveis_de_ambiente()
+
+# 3. Importa o logger. Ele será instanciado herdando as configurações recém-carregadas!
+from helpers import log
+
+# 4. Utiliza o logger normalmente
+log.info("Logger inicializado com as configurações corretas do .env!")
+```
+
+---
+
+
 ## 4.2 Data e Hora (datetime)
 
 Subpacote: `helpers.datetime`

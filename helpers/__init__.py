@@ -1,3 +1,11 @@
+"""
+Pacote de helpers utilitários com suporte a lazy-loading (carregamento sob demanda).
+
+O bloco 'if TYPE_CHECKING' é utilizado de forma estratégica para satisfazer os analisadores
+estáticos de tipo (como o Pylance/IDE). Isso foi implementado especificamente para que a função
+'inicializar_variaveis_de_ambiente' possa ser importada e executada antes da inicialização
+e configuração do logger ('log'), prevenindo a criação prematura do logger com variáveis obsoletas.
+"""
 from typing import Any, TYPE_CHECKING
 
 if TYPE_CHECKING:
