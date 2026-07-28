@@ -4,7 +4,7 @@ import os
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../../..")))
 
-from utils.validation.VerificaTipo import deco_verifica_tipo
+from helpers.validation.VerificaTipo import deco_verifica_tipo
 
 class TestVerificaTipo(unittest.TestCase):
 
@@ -40,7 +40,7 @@ class TestVerificaTipo(unittest.TestCase):
             return a
 
         with self.assertRaises(TypeError):
-            func_teste("não é int")
+            func_teste("não é int")  # type: ignore
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)

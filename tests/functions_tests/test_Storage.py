@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import MagicMock, patch
 
-from functions.cloud.storage import (
+from services.cloud.storage import (
     upload_file_to_gcs,
     listar_conteudo,
     deletar_arquivo,
@@ -29,7 +29,7 @@ class TestStorageFunctions(unittest.TestCase):
         with self.assertRaises(ValueError):
             get_bucket(self.mock_client, "")
 
-    @patch("functions.cloud.storage.UploadFileToGcs.path.join")
+    @patch("services.cloud.storage.UploadFileToGcs.path.join")
     def test_upload_file_to_gcs_success(self, mock_path_join):
         mock_path_join.return_value = "/tmp/file.txt"
         mock_blob = MagicMock()
@@ -98,7 +98,7 @@ class TestStorageFunctions(unittest.TestCase):
                 nome_arquivo="file.txt",
             )
 
-    @patch("functions.cloud.storage.DownloadArquivo.tempfile.NamedTemporaryFile")
+    @patch("services.cloud.storage.DownloadArquivo.tempfile.NamedTemporaryFile")
     def test_download_arquivo(self, mock_tempfile):
         mock_blob = MagicMock()
         mock_blob.exists.return_value = True

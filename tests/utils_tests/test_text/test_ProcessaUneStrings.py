@@ -5,7 +5,7 @@ import os
 # Adiciona o diretório raiz ao path para importar o pacote globaltirh_utils
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../../..")))
 
-from utils.text.ProcessaUneStrings import processa_une_strings
+from helpers.text.ProcessaUneStrings import processa_une_strings
 
 class TestProcessaUneStrings(unittest.TestCase):
 

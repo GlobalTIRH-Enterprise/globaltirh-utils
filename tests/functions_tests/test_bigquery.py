@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import MagicMock, patch
 
-from functions.cloud.big_query import (
+from services.cloud.big_query import (
     create_dataset,
     create_table,
     insert_data,
