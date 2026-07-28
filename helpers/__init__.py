@@ -1,4 +1,22 @@
-from typing import Any
+from typing import Any, TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from .config import log, recreate_logger, inicializar_variaveis_de_ambiente
+    from .datetime import tempo_to_brasilia
+    from .gcp import (
+        generate_access_token,
+        salvar_credenciais,
+        check_content_is_valid,
+        validar_gsutil_link,
+    )
+    from .io import guess_mimetype, volume_read, volume_write
+    from .text import (
+        formatar_texto_para_identificador,
+        get_dict_from_text,
+        processa_une_strings,
+        string_to_bool,
+    )
+    from .validation import verifica_tipo, deco_verifica_tipo
 
 __all__ = [
     "log",

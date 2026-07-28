@@ -1,4 +1,8 @@
-from typing import Any
+from typing import Any, TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from .CreateLogger import log, recreate_logger
+    from .IniciarVariaveisAmbiente import inicializar_variaveis_de_ambiente
 
 __all__ = ["log", "recreate_logger", "inicializar_variaveis_de_ambiente"]
 
