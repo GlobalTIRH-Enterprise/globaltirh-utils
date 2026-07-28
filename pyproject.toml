@@ -34,4 +34,4 @@ classifiers = [
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["services", "helpers"]
+include = ["services*", "helpers*"]
