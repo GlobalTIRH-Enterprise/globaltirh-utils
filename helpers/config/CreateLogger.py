@@ -94,6 +94,29 @@ def create_logger() -> logging.Logger:
     nome_logger, nivel_log_str = _get_env_logger_data()
     logger = logging.getLogger(nome_logger)
 
+    # Verificação de ambiente Cloud Run
+    is_cloud_run = getenv("K_SERVICE") is not None and getenv("K_REVISION") is not None
+
+    if is_cloud_run:
+        print("Ambiente Cloud Run detectado. Configurando google-cloud-logging...")
+        try:
+            import google.cloud.logging
+            from google.cloud.logging.handlers import CloudLoggingHandler
+            
+            client = google.cloud.logging.Client()
+            handler = CloudLoggingHandler(client)
+            handler.setFormatter(logging.Formatter(FormatadorColorido.FORMATO))
+            logger.addHandler(handler)
+        except ImportError:
+            print("Aviso: google-cloud-logging não está instalado no ambiente.")
+        except Exception as e:
+            print(f"Erro ao inicializar google-cloud-logging: {e}")
+
+        nivel_log = getattr(logging, nivel_log_str, logging.INFO)
+        logger.setLevel(nivel_log)
+        logger.propagate = False
+        return logger
+
     # Evitar handlers duplicados (Idempotência)
     # Se o logger já tiver handlers, assumimos que já foi configurado e o retornamos.
     if logger.handlers:
@@ -125,6 +148,14 @@ def recreate_logger() -> logging.Logger:
         logging.Logger: Instância do logger configurado e atualizado.
     """
     global log
+
+    # Se estiver no Cloud Run, ignora a recriação do logger
+    is_cloud_run = getenv("K_SERVICE") is not None and getenv("K_REVISION") is not None
+    if is_cloud_run:
+        print("Aviso: Tentativa de recriar o logger no ambiente Cloud Run foi ignorada para manter a consistência.")
+        if "log" in globals() and log:
+            return log
+        return create_logger()
 
     # Limpa handlers do logger antigo antes de mudar a referência
     if "log" in globals() and log:
