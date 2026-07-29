@@ -20,7 +20,8 @@ dependencies = [
     "google-cloud-storage",
     "google-genai",
     "PyJWT[crypto]",
-    "requests"
+    "requests",
+    "google-cloud-logging"
 ]
 classifiers = [
     "Programming Language :: Python :: 3",
