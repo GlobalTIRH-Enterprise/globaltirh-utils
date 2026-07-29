@@ -92,7 +92,6 @@ class TestCreateLogger(unittest.TestCase):
 
             # Verifica se o print de detecção foi emitido
             stdout_output = mock_stdout.getvalue()
-            sys.__stdout__.write(f"\nDEBUG STDOUT: {stdout_output}\n")
 
             self.assertIn("Ambiente Cloud Run detectado", stdout_output)
             self.assertIn("Configurando google-cloud-logging", stdout_output)
@@ -135,7 +134,6 @@ class TestCreateLogger(unittest.TestCase):
 
             # Verifica se o aviso de que recreate foi ignorado foi printado no stdout
             stdout_output = mock_stdout.getvalue()
-            sys.__stdout__.write(f"\nDEBUG STDOUT RECREATE: {stdout_output}\n")
             
             self.assertIn("Tentativa de recriar o logger no ambiente Cloud Run foi ignorada", stdout_output)
 
