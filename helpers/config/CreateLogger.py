@@ -101,8 +101,12 @@ def create_logger() -> logging.Logger:
         print("Ambiente Cloud Run detectado. Configurando google-cloud-logging...")
         try:
             import google.cloud.logging
+            from google.cloud.logging.handlers import CloudLoggingHandler
+            
             client = google.cloud.logging.Client()
-            client.setup_logging()
+            handler = CloudLoggingHandler(client)
+            handler.setFormatter(logging.Formatter(FormatadorColorido.FORMATO))
+            logger.addHandler(handler)
         except ImportError:
             print("Aviso: google-cloud-logging não está instalado no ambiente.")
         except Exception as e:
@@ -110,7 +114,7 @@ def create_logger() -> logging.Logger:
 
         nivel_log = getattr(logging, nivel_log_str, logging.INFO)
         logger.setLevel(nivel_log)
-        logger.propagate = True
+        logger.propagate = False
         return logger
 
     # Evitar handlers duplicados (Idempotência)

@@ -33,6 +33,11 @@ class TestCreateLogger(unittest.TestCase):
             else:
                 os.environ[key] = val
 
+        # Limpa os handlers do logger singleton para evitar vazamento (leaks) de mock para outros testes
+        logger = logging.getLogger(cl_module.log.name)
+        for handler in list(logger.handlers):
+            logger.removeHandler(handler)
+
         # Recarrega o módulo para deixar o estado limpo para os próximos testes
         importlib.reload(cl_module)
 
@@ -73,12 +78,14 @@ class TestCreateLogger(unittest.TestCase):
         # Mock de google.cloud.logging
         mock_google = MagicMock()
         mock_gcp_logging = mock_google.cloud.logging
+        mock_gcp_handlers = mock_google.cloud.logging.handlers
 
         # Patch sys.stdout para capturar prints e o módulo google.cloud.logging
         with patch.dict("sys.modules", {
             "google": mock_google,
             "google.cloud": mock_google.cloud,
-            "google.cloud.logging": mock_gcp_logging
+            "google.cloud.logging": mock_gcp_logging,
+            "google.cloud.logging.handlers": mock_gcp_handlers
         }), patch("sys.stdout", new=io.StringIO()) as mock_stdout:
 
             importlib.reload(cl_module)
@@ -90,12 +97,12 @@ class TestCreateLogger(unittest.TestCase):
             self.assertIn("Ambiente Cloud Run detectado", stdout_output)
             self.assertIn("Configurando google-cloud-logging", stdout_output)
 
-            # Verifica se o client setup_logging foi chamado
+            # Verifica se o client e o CloudLoggingHandler foram chamados
             mock_gcp_logging.Client.assert_called_once()
-            mock_gcp_logging.Client().setup_logging.assert_called_once()
+            mock_gcp_handlers.CloudLoggingHandler.assert_called_once_with(mock_gcp_logging.Client())
 
-            # Verifica se o logger retornado propaga logs (para GCP)
-            self.assertTrue(cl_module.log.propagate)
+            # Verifica se o logger retornado não propaga logs (usa handler próprio)
+            self.assertFalse(cl_module.log.propagate)
 
     def test_recreate_logger_cloud_run_ignored(self):
         # Configura as variáveis de ambiente do Cloud Run
@@ -105,11 +112,13 @@ class TestCreateLogger(unittest.TestCase):
         # Mock de google.cloud.logging
         mock_google = MagicMock()
         mock_gcp_logging = mock_google.cloud.logging
+        mock_gcp_handlers = mock_google.cloud.logging.handlers
 
         with patch.dict("sys.modules", {
             "google": mock_google,
             "google.cloud": mock_google.cloud,
-            "google.cloud.logging": mock_gcp_logging
+            "google.cloud.logging": mock_gcp_logging,
+            "google.cloud.logging.handlers": mock_gcp_handlers
         }), patch("sys.stdout", new=io.StringIO()) as mock_stdout:
 
             importlib.reload(cl_module)
